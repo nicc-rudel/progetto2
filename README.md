@@ -1,5 +1,5 @@
 # progetto2
-
+-aggiungere AOS
 -sistemare menù mobile perchè quando si scorre si sfalsa;
 -cookie da centrare;
 -sistemare diensioni container logo, troppo grande la sezione ma logo piccolo;
