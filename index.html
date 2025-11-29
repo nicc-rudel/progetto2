@@ -451,27 +451,67 @@
         }
         .total-price { font-family: var(--font-title); font-size: 2rem; color: var(--col-accent); font-weight: 700; }
 
-        /* --- 9. CONTATTI & FOOTER --- */
+        /* --- 9. CONTATTI & FOOTER (LAYOUT IBRIDO) --- */
+        
+        /* Base: Mobile (Esattamente come richiesto) */
+        .contact-layout {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            text-align: left; /* Tassativo per mobile */
+        }
+
+        .contact-col {
+            /* Nessuna larghezza fissa o flex grow su mobile */
+        }
+
         .contact-list li { margin-bottom: 15px; font-size: 18px; display: flex; align-items: center; gap: 10px; }
-        .contact-social { margin-top: 30px; font-size: 30px; display: flex; gap: 20px; }
+        
+        /* Su mobile, i valori sono nascosti */
+        .values-col { display: none; }
+
+        /* Desktop: Layout avanzato */
+        @media (min-width: 1024px) {
+             .contact-layout {
+                 justify-content: center;
+                 /* SPOSTAMENTO A DESTRA RICHIESTO */
+                 padding-left: 150px; 
+                 flex-wrap: nowrap; /* Evita a capo su desktop */
+                 align-items: flex-start;
+             }
+             
+             .contact-col {
+                 flex: 1;
+                 min-width: 250px;
+             }
+
+             /* Mostra valori su desktop */
+             .values-col { display: block; }
+             
+             .contact-col-center {
+                 text-align: center;
+             }
+             .contact-col-center .contact-list {
+                 display: inline-block;
+                 text-align: left;
+             }
+
+             .contact-col-right {
+                 display: flex;
+                 flex-direction: column;
+                 align-items: flex-end;
+             }
+             .contact-col-right .values-list {
+                 text-align: left;
+             }
+        }
+
+        .contact-social { margin-top: 30px; font-size: 30px; display: flex; gap: 20px; justify-content: center; }
         .contact-social a:hover { color: var(--col-accent); }
 
-        /* --- STILI VALORI (Desktop Only) --- */
-        .values-col {
-            flex: 1;
-            min-width: 300px;
-            border-left: 1px solid rgba(255,255,255,0.2);
-            padding-left: 40px;
-            display: none; /* Nascosto su mobile di default */
-        }
-        
-        @media(min-width: 1024px) {
-            .values-col { display: block; }
-        }
-
-        .values-list {
-            margin-top: 20px;
-        }
+        /* STILI VALORI */
+        .values-list { margin-top: 0; }
         .value-item {
             display: flex;
             align-items: center;
@@ -480,22 +520,19 @@
             font-size: 16px;
         }
         .value-icon {
-            width: 40px;
-            height: 40px;
+            width: 40px; height: 40px;
             background: rgba(255,255,255,0.1);
             border: 1px solid var(--col-accent);
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             color: var(--col-accent);
             font-size: 18px;
+            flex-shrink: 0;
         }
 
         footer {
             background-color: #1a1a1a; color: #777; text-align: center; padding: 30px 0; font-size: 14px;
         }
-        /* Padding extra nel footer per non coprire il copyright con la navbar mobile */
         @media(max-width: 1023px) { footer { padding-bottom: 90px; } }
 
         /* --- 10. ELEMENTI FLOTTANTI & WHATSAPP INTERATTIVO --- */
@@ -657,14 +694,11 @@
     <!-- SERVIZI (Slider) -->
     <section id="servizi" class="services">
         <div class="container">
-            <!-- REMOVED REVEAL -->
-            <h2>I Nostri Servizi</h2>
-            <!-- REMOVED REVEAL -->
-            <div class="slider-container">
+            <h2 class="reveal">I Nostri Servizi</h2>
+            <div class="slider-container reveal">
                 <div class="slider">
                     <!-- Slides -->
                     <div class="slide">
-                        <!-- ADDED FETCHPRIORITY -->
                         <img src="img/corridoio_spina_di_pesce.jpeg" alt="Pavimento Spina" fetchpriority="high">
                         <div class="slide-overlay">
                             <h3>Pavimento a spina di pesce</h3>
@@ -686,7 +720,7 @@
                         </div>
                     </div>
                     <div class="slide">
-                        <img src="img/" alt="SPC">
+                        <img src="img/spc_floor.jpeg" alt="SPC">
                         <div class="slide-overlay">
                             <h3>SPC</h3>
                             <button class="open-modal" data-modal="modal4">Dettagli</button>
@@ -925,30 +959,33 @@
         </div>
     </section>
 
-    <!-- CONTATTI -->
+    <!-- CONTATTI (NUOVO LAYOUT) -->
     <section id="contatti" class="contact">
         <div class="container">
             <h2 class="reveal">Contatti</h2>
-            <div class="reveal" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; text-align: left;">
-                <div>
-                    <h3>Email</h3>
+            
+            <div class="contact-layout reveal">
+                <!-- Colonna Sinistra: Email -->
+                <div class="contact-col contact-col-left">
+                    <h3><i class="fas fa-envelope-open-text" style="color:var(--col-accent);"></i> Scrivici</h3>
                     <ul class="contact-list">
                         <li><i class="fas fa-envelope"></i> luxurywoodpavimenti@gmail.com</li>
                         <li><i class="fas fa-envelope"></i> luxurywood@upapec.it</li>
-                        <!--<li><i class="fas fa-map-marker-alt"></i>/li>-->
-                    </ul>
-                </div>
-                <div>
-                    <h3>Telefono</h3>
-                    <ul class="contact-list">
-                        <li><i class="fas fa-phone"></i> Agostino: 324 898 5320</li>
-                        <li><i class="fas fa-phone"></i> Niccolò: 392 385 0100</li>
                     </ul>
                 </div>
 
-                <!-- Colonna Valori (Visibile solo su Desktop) -->
-                <div class="values-col">
-                    <h3>Perché Sceglierci</h3>
+                <!-- Colonna Centrale: Telefono (Evidenziata) -->
+                <div class="contact-col contact-col-center">
+                    <h3><i class="fas fa-phone-volume" style="color:var(--col-accent);"></i> Chiamaci</h3>
+                    <ul class="contact-list" style="font-weight: bold;">
+                        <li><i class="fas fa-mobile-alt"></i> Agostino: 324 898 5320</li>
+                        <li><i class="fas fa-mobile-alt"></i> Niccolò: 392 385 0100</li>
+                    </ul>
+                </div>
+
+                <!-- Colonna Destra: Valori (Nascosta su mobile) -->
+                <div class="contact-col contact-col-right values-col">
+                    <h3><i class="fas fa-star" style="color:var(--col-accent);"></i> Perché Noi</h3>
                     <ul class="values-list">
                         <li class="value-item">
                             <div class="value-icon"><i class="fas fa-certificate"></i></div>
@@ -970,7 +1007,7 @@
                 </div>
             </div>
 
-            <div class="contact-social reveal" style="justify-content: center;">
+            <div class="contact-social reveal">
                 <a href="https://instagram.com/luxury_wood" target="_blank"><i class="fab fa-instagram"></i></a>
                 <a href="https://facebook.com/luxurywood" target="_blank"><i class="fab fa-facebook"></i></a>
             </div>
@@ -1060,17 +1097,30 @@
         const totalSlides = slides.length;
         let slideTimer = null;
 
-        // Funzione dedicata SOLO al reset della barra visiva
-        function resetProgressBar() {
+        // Funzione per animare la barra
+        function animateProgressBar() {
             const bar = document.querySelector(".progress-bar");
-            // Rimuoviamo la transizione per reset istantaneo a 0
+            // Rimuovi transizione per reset immediato a 0
             bar.style.transition = 'none';
             bar.style.width = '0%';
-            // Dopo un micro-ritardo, reimpostiamo la transizione per farla crescere
+            
+            // Timeout minimo per permettere al browser di registrare width: 0%
             setTimeout(() => {
                 bar.style.transition = 'width 4s linear';
                 bar.style.width = '100%';
             }, 50);
+        }
+
+        // Funzione per congelare la barra (pausa)
+        function freezeProgressBar() {
+            const bar = document.querySelector(".progress-bar");
+            // Ottieni la larghezza attuale calcolata
+            const computedStyle = window.getComputedStyle(bar);
+            const currentWidth = computedStyle.getPropertyValue('width');
+            
+            // Ferma la transizione e fissa la larghezza al valore corrente
+            bar.style.transition = 'none';
+            bar.style.width = currentWidth;
         }
 
         function updateSlider() {
@@ -1078,8 +1128,8 @@
             dots.forEach((dot, idx) => {
                 dot.classList.toggle("active", idx === slideIndex);
             });
-            // Quando lo slider cambia automaticamente, resettiamo la barra
-            resetProgressBar(); 
+            // Quando si cambia slide, parte una nuova animazione
+            animateProgressBar(); 
         }
 
         function nextSlide() {
@@ -1092,31 +1142,37 @@
             updateSlider();
         }
 
-        // Avvia il timer e sincronizza la barra
+        // Avvia il timer (nuovo ciclo)
         function startTimer() {
-            if (!slideTimer) {
-                slideTimer = setInterval(nextSlide, 4000);
-            }
+            // Assicurati che non ce ne sia già uno
+            if (slideTimer) clearInterval(slideTimer); 
+            
+            // Fai partire l'animazione della barra
+            animateProgressBar();
+            
+            // Imposta l'intervallo per la prossima slide
+            slideTimer = setInterval(nextSlide, 4000);
         }
 
-        // Ferma il timer
+        // Ferma il timer e congela la barra
         function stopTimer() {
             if (slideTimer) {
                 clearInterval(slideTimer);
                 slideTimer = null;
+                freezeProgressBar();
             }
         }
 
         // Gestione Click Manuale (Next/Prev)
         document.getElementById("nextSlide").addEventListener("click", () => {
             nextSlide(); 
-            // Reset manuale del timer per evitare sovrapposizioni
-            stopTimer();
+            // Reset manuale del timer
+            if (slideTimer) clearInterval(slideTimer);
             startTimer();
         });
         document.getElementById("prevSlide").addEventListener("click", () => {
             prevSlide(); 
-            stopTimer();
+            if (slideTimer) clearInterval(slideTimer);
             startTimer();
         });
 
@@ -1125,13 +1181,12 @@
             dot.addEventListener("click", () => {
                 slideIndex = idx;
                 updateSlider();
-                stopTimer();
+                if (slideTimer) clearInterval(slideTimer);
                 startTimer();
             });
         });
 
-        // Avvio iniziale (Reset barra + Start Timer)
-        resetProgressBar();
+        // Avvio iniziale
         startTimer();
 
 
@@ -1142,7 +1197,8 @@
             btn.addEventListener("click", (e) => {
                 const id = e.target.dataset.modal;
                 document.getElementById(id).style.display = "flex";
-                // FERMA TUTTO quando apro il modale
+                
+                // STOPPA IL TIMER QUANDO SI APRE IL DETTAGLIO
                 stopTimer(); 
             });
         });
@@ -1150,8 +1206,9 @@
         document.querySelectorAll(".close-modal-info").forEach(closeBtn => {
             closeBtn.addEventListener("click", (e) => {
                 e.target.closest(".modal-info").style.display = "none";
-                // QUANDO CHIUDO: Resetta la barra visiva e fai ripartire il timer INSIEME
-                resetProgressBar();
+                
+                // RIPRENDE IL TIMER QUANDO SI CHIUDE (Senza cambiare slide subito)
+                // Usiamo startTimer che riavvia animazione e contatore
                 startTimer(); 
             });
         });
@@ -1159,8 +1216,7 @@
         window.onclick = function(event) {
             if (event.target.classList.contains('modal-info')) {
                 event.target.style.display = "none";
-                // QUANDO CHIUDO (clic fuori): Resetta barra e timer
-                resetProgressBar();
+                // RIPRENDE IL TIMER SE SI CLICCA FUORI
                 startTimer();
             }
         }
