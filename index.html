@@ -373,13 +373,42 @@
         }
         .modal-info-content h3 { color: var(--col-accent); margin-bottom: 15px; }
 
-        /* --- 7. GALLERIA & LIGHTBOX (Zoom Elegante) --- */
-        #filterForm {
-            display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 30px;
+        /* --- 7. GALLERIA & LIGHTBOX (Zoom Elegante & Filtro Migliorato) --- */
+        
+        /* NUOVO STILE FILTRO (PULSANTI A PILLOLA) */
+        #filterContainer {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap; /* Per mobile */
         }
-        #category {
-            padding: 10px 20px; border-radius: 5px; border: 1px solid #ccc;
-            font-family: var(--font-body); font-size: 16px;
+
+        .filter-btn {
+            padding: 10px 25px;
+            border: 1px solid #ccc; /* Leggero bordo */
+            border-radius: 30px;
+            background: transparent;
+            color: #666;
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--col-accent);
+            color: var(--col-accent);
+        }
+
+        .filter-btn.active {
+            background-color: var(--col-accent);
+            border-color: var(--col-accent);
+            color: white;
+            box-shadow: 0 5px 15px rgba(196, 154, 108, 0.3);
         }
 
         .photo-gallery {
@@ -387,6 +416,31 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
+        }
+
+        /* GESTIONE FOTO SU MOBILE (NASCOSTE INIZIALMENTE) */
+        @media (max-width: 1024px) {
+            /* Nasconde le foto se la galleria è in stato di attesa */
+            .photo-gallery.awaiting-mobile-interaction .custom-image {
+                display: none !important;
+            }
+            
+            /* Mostra il messaggio di invito */
+            .photo-gallery.awaiting-mobile-interaction::before {
+                content: "👆 Tocca un filtro per visualizzare le foto";
+                display: block;
+                grid-column: 1 / -1; /* Occupa tutta la larghezza della griglia */
+                text-align: center;
+                width: 100%;
+                /* RIDOTTO SPAZIO DEL MESSAGGIO */
+                padding: 15px 10px; 
+                color: #888;
+                font-size: 14px; 
+                font-style: italic;
+                background-color: #f5f5f5;
+                border-radius: 8px;
+                border: 1px dashed #ccc;
+            }
         }
 
         .custom-image {
@@ -397,9 +451,16 @@
             cursor: pointer;
             
             /* Nuovo effetto Slow Zoom mantenuto (senza masonry) */
-            transition: transform 0.6s ease, filter 0.3s ease;
+            transition: transform 0.6s ease, filter 0.3s ease, opacity 0.4s ease;
             background: #e5e5e5; 
             position: relative;
+            /* Animazione FadeIn quando filtrate */
+            animation: fadeInGrid 0.5s ease-out;
+        }
+        
+        @keyframes fadeInGrid {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Hover Effect: Slow Zoom e Leggera Luminosità */
@@ -764,16 +825,16 @@
         <div class="container">
             <h2 class="reveal">Galleria Realizzazioni</h2>
             
-            <form id="filterForm" class="reveal">
-                <label for="category" style="font-weight: bold; margin-right: 10px;">Visualizza:</label>
-                <select id="category">
-                    <option value="tutte">Tutti i progetti</option>
-                    <option value="interni">Interni & Design</option>
-                    <option value="restauri">Restauri</option>
-                </select>
-            </form>
+            <!-- NUOVO FILTRO A PULSANTI -->
+            <div id="filterContainer" class="reveal">
+                <!-- Nota: Ho aggiunto active di default nel codice ma lo rimuoverò via JS su mobile -->
+                <button class="filter-btn active" data-filter="tutte">Tutti</button>
+                <button class="filter-btn" data-filter="interni">Interni & Design</button>
+                <button class="filter-btn" data-filter="restauri">Restauri</button>
+            </div>
 
-            <div class="photo-gallery">
+            <!-- Aggiunta classe per logica mobile -->
+            <div class="photo-gallery awaiting-mobile-interaction">
                 <!-- Cliccando si apre il Lightbox. Ho aggiunto la classe reveal ad ogni immagine -->
                 <img src="img/interno.jpeg" alt="Living Moderno" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(0)">
                 <img src="img/spinadipesce1.jpeg" alt="Dettaglio Spina" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(1)">
@@ -1106,19 +1167,58 @@
             }
         }
 
-        // --- 6. FILTRO GALLERIA ---
-        const filterSelect = document.getElementById("category");
+        // --- 6. FILTRO GALLERIA (Pulsanti + Logica Mobile) ---
+        const filterBtns = document.querySelectorAll(".filter-btn");
         const allImages = document.querySelectorAll(".custom-image");
+        const galleryContainer = document.querySelector('.photo-gallery');
+        const isMobile = window.innerWidth <= 1024; // Controllo dimensione schermo
+
+        // Se siamo su mobile, rimuovi l'active da "Tutti" inizialmente
+        if (isMobile) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        } else {
+            // Su desktop rimuovi la classe di attesa per mostrare subito tutto
+            galleryContainer.classList.remove('awaiting-mobile-interaction');
+        }
         
-        filterSelect.addEventListener("change", () => {
-            const cat = filterSelect.value;
-            allImages.forEach(img => {
-                const categories = img.dataset.category.split(" ");
-                if (cat === "tutte" || categories.includes(cat)) {
-                    img.style.display = "block";
-                } else {
-                    img.style.display = "none";
+        filterBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                const isMobileNow = window.innerWidth <= 1024;
+                
+                // LOGICA MOBILE: TOGGLE
+                // Se clicco un bottone GIA' attivo su mobile -> Deseleziona tutto e nascondi
+                if (isMobileNow && btn.classList.contains('active')) {
+                    btn.classList.remove("active");
+                    galleryContainer.classList.add('awaiting-mobile-interaction');
+                    return; // Esci, abbiamo finito
                 }
+
+                // LOGICA STANDARD (O NUOVA SELEZIONE SU MOBILE)
+                // Rimuovi classe active da tutti
+                filterBtns.forEach(b => b.classList.remove("active"));
+                // Aggiungi a quello cliccato
+                btn.classList.add("active");
+
+                // Se era in stato di attesa, rimuovilo per mostrare le foto
+                if (galleryContainer.classList.contains('awaiting-mobile-interaction')) {
+                    galleryContainer.classList.remove('awaiting-mobile-interaction');
+                }
+                
+                const cat = btn.getAttribute("data-filter");
+                
+                allImages.forEach(img => {
+                    const categories = img.dataset.category.split(" ");
+                    if (cat === "tutte" || categories.includes(cat)) {
+                        // Semplice show
+                        img.style.display = "block";
+                        // Piccola animazione fade-in riattivata
+                        img.style.animation = 'none';
+                        img.offsetHeight; /* trigger reflow */
+                        img.style.animation = 'fadeInGrid 0.5s ease-out';
+                    } else {
+                        img.style.display = "none";
+                    }
+                });
             });
         });
 
