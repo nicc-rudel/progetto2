@@ -2,1379 +2,1435 @@
 <html lang="it">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="icon" href="img/Logo_piccolo.png" type="image/jpeg">
-    <title>LuxuryWood | Pavimenti d'Eccellenza</title>
-    <meta name="description" content="LuxuryWood è un'azienda specializzata nella posa e restauro di pavimenti in legno di pregio.">
-
-    <!-- Preload Immagine Hero (Cruciale per velocità) -->
-    <link rel="preload" as="image" href="img/corridoio_spina_di_pesce.jpeg">
-
-    <!-- Font Eleganti (Google Fonts) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-
-    <!-- Icone -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
-    <!-- Librerie Esterne -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-    <style>
-        /* --- 1. VARIABILI & RESET --- */
-        :root {
-            --col-primary: #2C2C2C;       /* Nero Antracite */
-            --col-accent: #C49A6C;        /* Oro Legno */
-            --col-accent-hover: #A67C52;  /* Oro Scuro */
-            --col-bg: #F9F7F2;            /* Bianco Crema (Carta) */
-            --col-white: #FFFFFF;
-            --col-light-gray: #E5E5E5;
-            
-            --font-title: 'Playfair Display', serif;
-            --font-body: 'Lato', sans-serif;
-            
-            --nav-mobile-height: 60px; /* Altezza barra app */
-            --header-desktop-height: 80px;
-        }
-
-        * { box-sizing: border-box; outline: none; }
-        
-        html { scroll-behavior: smooth; }
-
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: var(--font-body);
-            background-color: var(--col-bg);
-            color: var(--col-primary);
-            line-height: 1.6;
-            /* Spazio extra in basso per il menu mobile */
-            padding-bottom: var(--nav-mobile-height); 
-            /* Importante per evitare scroll orizzontale durante le animazioni */
-            overflow-x: hidden; 
-        }
-
-        /* Rimuove il padding bottom su desktop */
-        @media (min-width: 1024px) {
-            body { padding-bottom: 0; }
-        }
-
-        h1, h2, h3 { font-family: var(--font-title); margin-top: 0; }
-        a { text-decoration: none; color: inherit; transition: 0.3s; }
-        ul { list-style: none; padding: 0; margin: 0; }
-        img { max-width: 100%; display: block; }
-        
-        /* Stile per immagini rotte (per anteprima) */
-        img[alt]:after {  
-            display: block;
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #f0f0f0;
-            content: attr(alt);
-            display: flex; align-items: center; justify-content: center;
-            color: #888; font-weight: bold; border: 1px dashed #ccc;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* --- ANIMAZIONI SCROLL REVEAL --- */
-        .reveal {
-            opacity: 0;
-            transform: translateY(50px); /* Parte dal basso */
-            transition: all 0.8s ease-out; /* Durata e fluidità */
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* --- 2. HEADER (DESKTOP) --- */
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background-color: var(--col-white);
-            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
-            height: var(--header-desktop-height);
-            display: flex;
-            align-items: center;
-            transition: height 0.3s ease;
-        }
-
-        header.scrolled { height: 60px; }
-
-        header .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 100%;
-            width: 100%;
-        }
-
-        .logo {
-            height: 300px;
-            width: auto;
-            object-fit: contain;
-            /* Aggiunge un'ombra leggera per staccarlo dallo sfondo */
-            filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.3));
-        }
-        
-        .logo-text-fallback {
-            font-family: var(--font-title);
-            color: var(--col-accent);
-            font-size: 24px;
-            font-weight: bold;
-            margin: 0;
-            display: none; /* Mostrato via JS se img fallisce */
-        }
-
-        /* Menu Desktop */
-        .desktop-menu {
-            display: flex;
-            gap: 30px;
-        }
-
-        .desktop-menu li a {
-            font-size: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-            color: var(--col-primary);
-            position: relative;
-            padding-bottom: 5px;
-        }
-
-        .desktop-menu li a::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 0; width: 0; height: 2px;
-            background-color: var(--col-accent);
-            transition: 0.3s;
-        }
-
-        .desktop-menu li a:hover::after { width: 100%; }
-
-        .header-contacts {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .btn-contact-header {
-            background-color: var(--col-primary);
-            color: var(--col-white);
-            padding: 8px 18px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .btn-contact-header:hover { background-color: var(--col-accent); color: white; }
-
-        /* Nascondi elementi desktop su mobile */
-        .mobile-hidden { display: none; }
-        
-        @media (min-width: 1024px) {
-            .mobile-visible { display: none; }
-            .mobile-hidden { display: flex; }
-        }
-
-        /* Nascondi menu desktop su mobile */
-        @media (max-width: 1023px) {
-            .desktop-menu, .header-contacts { display: none; }
-            header { justify-content: center; }
-            header .container { justify-content: center; }
-        }
-
-        /* --- 3. MOBILE BOTTOM NAVIGATION (Instagram Style) --- */
-        .mobile-bottom-nav {
-            position: fixed;
-            bottom: 0; left: 0; width: 100%;
-            height: var(--nav-mobile-height);
-            background-color: var(--col-white);
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
-            z-index: 2000;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            border-top: 1px solid #eee;
-            padding-bottom: env(safe-area-inset-bottom); /* Safe area per iPhone */
-        }
-
-        @media (min-width: 1024px) { .mobile-bottom-nav { display: none; } }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            color: #999;
-            flex: 1;
-            height: 100%;
-            transition: color 0.2s;
-            padding-top: 5px;
-        }
-
-        .nav-item i {
-            font-size: 20px;
-            margin-bottom: 4px;
-            transition: transform 0.2s;
-        }
-
-        .nav-item.active, .nav-item:hover { color: var(--col-accent); }
-        .nav-item.active i { transform: translateY(-2px); }
-
-        /* --- 4. SEZIONI GENERALI --- */
-        section {
-            padding: 60px 0;
-            /* Compensazione scroll per header fisso */
-            scroll-margin-top: 100px; 
-        }
-
-        section h2 {
-            font-size: 2.5rem;
-            text-align: center;
-            margin-bottom: 40px;
-            color: var(--col-primary);
-            position: relative;
-            padding-bottom: 15px;
-        }
-
-        section h2::after {
-            content: "";
-            position: absolute;
-            bottom: 0; left: 50%; transform: translateX(-50%);
-            width: 60px; height: 3px;
-            background-color: var(--col-accent);
-        }
-
-        /* Colori Sfondi Alternati */
-        .services { background-color: var(--col-white); }
-        .about { background-color: var(--col-bg); }
-        .photo { background-color: var(--col-white); }
-        .preventivo { background-color: var(--col-bg); }
-        .contact { background-color: var(--col-primary); color: white; }
-        .contact h2 { color: white; }
-        .contact h2::after { background-color: white; }
-
-        /* --- 5. SLIDER SERVIZI --- */
-        .slider-container {
-            position: relative;
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
-            overflow: hidden;
-            border-radius: 12px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
-            background: #eee; /* Fallback se immagine non carica */
-        }
-
-        .slider { display: flex; }
-        .slide { min-width: 100%; position: relative; }
-        
-        .slide img {
-            width: 100%;
-            height: 500px;
-            object-fit: cover;
-        }
-        /* Mobile slider height */
-        @media (max-width: 768px) { .slide img { height: 300px; } }
-
-        .slide-overlay {
-            position: absolute;
-            bottom: 0; left: 0; width: 100%;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-            color: white;
-            padding: 30px;
-            padding-top: 80px;
-            text-align: center;
-        }
-
-        .open-modal {
-            background: var(--col-accent);
-            color: white;
-            border: none;
-            padding: 10px 25px;
-            border-radius: 50px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: transform 0.2s;
-        }
-        .open-modal:hover { transform: scale(1.05); background: var(--col-accent-hover); }
-
-        /* Frecce Slider */
-        .nav-btn {
-            position: absolute; top: 50%; transform: translateY(-50%);
-            background: rgba(255,255,255,0.2); backdrop-filter: blur(5px);
-            border: 1px solid rgba(255,255,255,0.5);
-            color: white; width: 45px; height: 45px;
-            border-radius: 50%; cursor: pointer; z-index: 10;
-            display: flex; align-items: center; justify-content: center;
-            transition: 0.3s;
-        }
-        .nav-btn:hover { background: var(--col-accent); border-color: var(--col-accent); }
-        #prevSlide { left: 15px; }
-        #nextSlide { right: 15px; }
-
-        /* Dots Slider */
-        .dots-container { display: flex; justify-content: center; gap: 10px; margin-top: 20px; }
-        .dot {
-            width: 10px; height: 10px; background: #ccc; border-radius: 50%;
-            cursor: pointer; transition: 0.3s;
-        }
-        .dot.active { background: var(--col-accent); transform: scale(1.3); }
-
-        .progress-bar-container {
-            height: 3px; background: #e0e0e0; width: 200px; margin: 10px auto; border-radius: 2px; overflow: hidden;
-        }
-        .progress-bar { height: 100%; background: var(--col-accent); width: 0; }
-
-        /* --- 6. MODALI TESTO (Servizi) --- */
-        .modal-info {
-            display: none; position: fixed; z-index: 3000;
-            left: 0; top: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(3px);
-            align-items: center; justify-content: center; padding: 20px;
-        }
-        .modal-info-content {
-            background: white; padding: 40px; border-radius: 8px;
-            max-width: 500px; width: 100%; position: relative;
-            text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-        }
-        .close-modal-info {
-            position: absolute; top: 15px; right: 20px;
-            font-size: 28px; cursor: pointer; color: #888;
-        }
-        .modal-info-content h3 { color: var(--col-accent); margin-bottom: 15px; }
-
-        /* --- 7. GALLERIA & LIGHTBOX (Zoom) --- */
-        #filterForm {
-            display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 30px;
-        }
-        #category {
-            padding: 10px 20px; border-radius: 5px; border: 1px solid #ccc;
-            font-family: var(--font-body); font-size: 16px;
-        }
-
-        .photo-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .custom-image {
-            width: 100%; height: 280px; object-fit: cover;
-            border-radius: 8px; cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            background: #e5e5e5; /* Fallback background */
-            position: relative;
-        }
-        .custom-image:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
-
-        /* Lightbox */
-        .lightbox {
-            display: none; position: fixed; z-index: 4000;
-            left: 0; top: 0; width: 100%; height: 100%;
-            /* MODIFICA: Sfondo semi-trasparente con sfocatura */
-            background: rgba(0, 0, 0, 0.7); 
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px); /* Per supporto Safari */
-            align-items: center; justify-content: center;
-        }
-        .lightbox.active { display: flex; }
-
-        .lightbox-img {
-            max-width: 90%; max-height: 85vh;
-            border: 4px solid white; border-radius: 4px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.8);
-            object-fit: contain;
-            background: #333; /* Fallback */
-        }
-
-        .lightbox-close {
-            position: absolute; top: 20px; right: 30px;
-            color: white; font-size: 40px; cursor: pointer; transition: 0.3s; z-index: 4001;
-        }
-        .lightbox-close:hover { color: var(--col-accent); }
-
-        .lightbox-prev, .lightbox-next {
-            position: absolute; top: 50%; transform: translateY(-50%);
-            color: white; font-size: 30px; padding: 15px;
-            background: rgba(255,255,255,0.1); border-radius: 50%;
-            cursor: pointer; transition: 0.3s; user-select: none; z-index: 4001;
-        }
-        .lightbox-prev:hover, .lightbox-next:hover { background: var(--col-accent); }
-        .lightbox-prev { left: 20px; }
-        .lightbox-next { right: 20px; }
-
-        /* --- 8. PREVENTIVO --- */
-        .simulator-container {
-            background: white; padding: 40px; border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-top: 30px;
-        }
-        
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: #666; }
-        
-        input, select, textarea {
-            width: 100%; padding: 14px; border: 1px solid #ddd;
-            border-radius: 6px; font-size: 16px; font-family: var(--font-body);
-            transition: border-color 0.3s;
-        }
-        input:focus, select:focus, textarea:focus { border-color: var(--col-accent); }
-
-        .form-columns { display: flex; flex-wrap: wrap; gap: 40px; }
-        .form-column { flex: 1; min-width: 300px; }
-
-        button {
-            background: var(--col-primary); color: white;
-            border: none; padding: 15px 40px; border-radius: 50px;
-            font-size: 16px; font-weight: 700; cursor: pointer;
-            transition: 0.3s; display: inline-block;
-        }
-        button:hover { background: var(--col-accent); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(196, 154, 108, 0.4); }
-
-        .result-container {
-            margin-top: 30px; padding: 30px; background: #FDFBF7;
-            border: 1px solid var(--col-accent); border-radius: 8px; display: none;
-        }
-        .total-price { font-family: var(--font-title); font-size: 2rem; color: var(--col-accent); font-weight: 700; }
-
-        /* --- 9. CONTATTI & FOOTER --- */
-        .contact-list li { margin-bottom: 15px; font-size: 18px; display: flex; align-items: center; gap: 10px; }
-        .contact-social { margin-top: 30px; font-size: 30px; display: flex; gap: 20px; }
-        .contact-social a:hover { color: var(--col-accent); }
-
-        /* --- STILI VALORI (Desktop Only) --- */
-        .values-col {
-            flex: 1;
-            min-width: 300px;
-            border-left: 1px solid rgba(255,255,255,0.2);
-            padding-left: 40px;
-            display: none; /* Nascosto su mobile di default */
-        }
-        
-        @media(min-width: 1024px) {
-            .values-col { display: block; }
-        }
-
-        .values-list {
-            margin-top: 20px;
-        }
-        .value-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-            font-size: 16px;
-        }
-        .value-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid var(--col-accent);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--col-accent);
-            font-size: 18px;
-        }
-
-        footer {
-            background-color: #1a1a1a; color: #777; text-align: center; padding: 30px 0; font-size: 14px;
-        }
-        /* Padding extra nel footer per non coprire il copyright con la navbar mobile */
-        @media(max-width: 1023px) { footer { padding-bottom: 90px; } }
-
-        /* --- 10. ELEMENTI FLOTTANTI & WHATSAPP INTERATTIVO --- */
-        
-        /* Animazione "Pulse" (Battito) */
-        @keyframes pulse-green {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
-        }
-
-        /* Animazione "Wiggle" (Tremolio) */
-        @keyframes wiggle {
-            0% { transform: rotate(0deg); }
-            25% { transform: rotate(-10deg); }
-            50% { transform: rotate(10deg); }
-            75% { transform: rotate(-5deg); }
-            100% { transform: rotate(0deg); }
-        }
-
-        .whatsapp-float {
-            position: fixed; bottom: 90px; right: 20px;
-            width: 60px; height: 60px; background: #25D366;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 1500; transition: 0.3s;
-            /* Attiva l'animazione pulsante */
-            animation: pulse-green 2s infinite; 
-        }
-
-        .whatsapp-float img { width: 35px; }
-        
-        /* Interazione Hover: Ferma il battito, ingrandisce e fa tremare l'icona */
-        .whatsapp-float:hover { 
-            animation: none; /* Ferma il pulse */
-            transform: scale(1.1); /* Ingrandisce */
-        }
-        
-        .whatsapp-float:hover .whatsapp-icon {
-             animation: wiggle 0.5s ease-in-out; /* Tremolio icona */
-        }
-
-        /* Tooltip (Fumetto) */
-        .whatsapp-tooltip {
-            position: absolute;
-            right: 70px; /* Posizionato a sinistra del bottone */
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: white;
-            color: #333;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: bold;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: 0.3s;
-        }
-        
-        /* Triangolino del tooltip */
-        .whatsapp-tooltip::after {
-            content: '';
-            position: absolute;
-            right: -6px;
-            top: 50%;
-            transform: translateY(-50%);
-            border-width: 6px 0 6px 6px;
-            border-style: solid;
-            border-color: transparent transparent transparent white;
-        }
-
-        /* Mostra il tooltip su hover */
-        .whatsapp-float:hover .whatsapp-tooltip {
-            opacity: 1;
-            visibility: visible;
-            right: 80px; /* Piccolo movimento di entrata */
-        }
-
-        @media(min-width: 1024px) { .whatsapp-float { bottom: 30px; } }
-
-        /* COOKIE BANNER CENTRATO */
-        .cookie-banner {
-            position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 400px; background: rgba(30,30,30,0.95);
-            color: white; padding: 20px; border-radius: 10px; text-align: center;
-            z-index: 5000; display: none;
-        }
-        /* Override per Desktop: mantieni centrato ma cambia altezza dal fondo */
-        @media(min-width: 1024px) { 
-            .cookie-banner { bottom: 30px; } 
-        }
-        
-        .cookie-btn { padding: 8px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin: 5px; }
-        .cookie-accept { background: var(--col-accent); color: white; }
-        .cookie-decline { background: #555; color: white; }
-
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="img/Logo_piccolo.png" type="image/jpeg">
+    <title>LuxuryWood | Pavimenti d'Eccellenza</title>
+    <meta name="description" content="LuxuryWood è un'azienda specializzata nella posa e restauro di pavimenti in legno di pregio.">
+
+    <!-- Preload Immagine Hero (Cruciale per velocità) -->
+    <link rel="preload" as="image" href="img/corridoio_spina_di_pesce.jpeg">
+
+    <!-- Font Eleganti (Google Fonts) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <!-- Icone -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Librerie Esterne -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        /* --- 1. VARIABILI & RESET --- */
+        :root {
+            --col-primary: #2C2C2C;       /* Nero Antracite */
+            --col-accent: #C49A6C;        /* Oro Legno */
+            --col-accent-hover: #A67C52;  /* Oro Scuro */
+            --col-bg: #F9F7F2;            /* Bianco Crema (Carta) */
+            --col-white: #FFFFFF;
+            --col-light-gray: #E5E5E5;
+            
+            --font-title: 'Playfair Display', serif;
+            --font-body: 'Lato', sans-serif;
+            
+            --nav-mobile-height: 60px; /* Altezza barra app */
+            --header-desktop-height: 80px;
+        }
+
+        * { box-sizing: border-box; outline: none; }
+        
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-body);
+            background-color: var(--col-bg);
+            color: var(--col-primary);
+            line-height: 1.6;
+            /* Spazio extra in basso per il menu mobile */
+            padding-bottom: var(--nav-mobile-height); 
+            /* Importante per evitare scroll orizzontale durante le animazioni */
+            overflow-x: hidden; 
+        }
+
+        /* Rimuove il padding bottom su desktop */
+        @media (min-width: 1024px) {
+            body { padding-bottom: 0; }
+        }
+
+        h1, h2, h3 { font-family: var(--font-title); margin-top: 0; }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; padding: 0; margin: 0; }
+        img { max-width: 100%; display: block; }
+        
+        /* Stile per immagini rotte (per anteprima) */
+        img[alt]:after {  
+            display: block;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #f0f0f0;
+            content: attr(alt);
+            display: flex; align-items: center; justify-content: center;
+            color: #888; font-weight: bold; border: 1px dashed #ccc;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* --- ANIMAZIONI SCROLL REVEAL --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px); /* Parte dal basso */
+            transition: all 0.8s ease-out; /* Durata e fluidità */
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- 2. HEADER (DESKTOP) --- */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: var(--col-white);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            height: var(--header-desktop-height);
+            display: flex;
+            align-items: center;
+            transition: height 0.3s ease;
+        }
+
+        header.scrolled { height: 60px; }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        .logo {
+            height: 300px;
+            width: auto;
+            object-fit: contain;
+            /* Aggiunge un'ombra leggera per staccarlo dallo sfondo */
+            filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.3));
+        }
+        
+        .logo-text-fallback {
+            font-family: var(--font-title);
+            color: var(--col-accent);
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+            display: none; /* Mostrato via JS se img fallisce */
+        }
+
+        /* Menu Desktop */
+        .desktop-menu {
+            display: flex;
+            gap: 30px;
+        }
+
+        .desktop-menu li a {
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            color: var(--col-primary);
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        .desktop-menu li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; width: 0; height: 2px;
+            background-color: var(--col-accent);
+            transition: 0.3s;
+        }
+
+        .desktop-menu li a:hover::after { width: 100%; }
+
+        .header-contacts {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-contact-header {
+            background-color: var(--col-primary);
+            color: var(--col-white);
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-contact-header:hover { background-color: var(--col-accent); color: white; }
+
+        /* Nascondi elementi desktop su mobile */
+        .mobile-hidden { display: none; }
+        
+        @media (min-width: 1024px) {
+            .mobile-visible { display: none; }
+            .mobile-hidden { display: flex; }
+        }
+
+        /* Nascondi menu desktop su mobile */
+        @media (max-width: 1023px) {
+            .desktop-menu, .header-contacts { display: none; }
+            header { justify-content: center; }
+            header .container { justify-content: center; }
+        }
+
+        /* --- 3. MOBILE BOTTOM NAVIGATION (Instagram Style) --- */
+        .mobile-bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; width: 100%;
+            height: var(--nav-mobile-height);
+            background-color: var(--col-white);
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+            z-index: 2000;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #eee;
+            padding-bottom: env(safe-area-inset-bottom); /* Safe area per iPhone */
+        }
+
+        @media (min-width: 1024px) { .mobile-bottom-nav { display: none; } }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #999;
+            flex: 1;
+            height: 100%;
+            transition: color 0.2s;
+            padding-top: 5px;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+            transition: transform 0.2s;
+        }
+
+        .nav-item.active, .nav-item:hover { color: var(--col-accent); }
+        .nav-item.active i { transform: translateY(-2px); }
+
+        /* --- 4. SEZIONI GENERALI --- */
+        section {
+            padding: 60px 0;
+            /* Compensazione scroll per header fisso */
+            scroll-margin-top: 100px; 
+        }
+
+        section h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--col-primary);
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        section h2::after {
+            content: "";
+            position: absolute;
+            bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 60px; height: 3px;
+            background-color: var(--col-accent);
+        }
+
+        /* Colori Sfondi Alternati */
+        .services { background-color: var(--col-white); }
+        .about { background-color: var(--col-bg); }
+        .photo { background-color: var(--col-white); }
+        .preventivo { background-color: var(--col-bg); }
+        .contact { background-color: var(--col-primary); color: white; }
+        .contact h2 { color: white; }
+        .contact h2::after { background-color: white; }
+
+        /* --- 5. SLIDER SERVIZI --- */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            background: #eee; /* Fallback se immagine non carica */
+        }
+
+        .slider { display: flex; }
+        .slide { min-width: 100%; position: relative; }
+        
+        .slide img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+        }
+        /* Mobile slider height */
+        @media (max-width: 768px) { .slide img { height: 300px; } }
+
+        .slide-overlay {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            padding: 30px;
+            padding-top: 80px;
+            text-align: center;
+        }
+
+        .open-modal {
+            background: var(--col-accent);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: transform 0.2s;
+        }
+        .open-modal:hover { transform: scale(1.05); background: var(--col-accent-hover); }
+
+        /* Frecce Slider */
+        .nav-btn {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(255,255,255,0.2); backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.5);
+            color: white; width: 45px; height: 45px;
+            border-radius: 50%; cursor: pointer; z-index: 10;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.3s;
+        }
+        .nav-btn:hover { background: var(--col-accent); border-color: var(--col-accent); }
+        #prevSlide { left: 15px; }
+        #nextSlide { right: 15px; }
+
+        /* Dots Slider */
+        .dots-container { display: flex; justify-content: center; gap: 10px; margin-top: 20px; }
+        .dot {
+            width: 10px; height: 10px; background: #ccc; border-radius: 50%;
+            cursor: pointer; transition: 0.3s;
+        }
+        .dot.active { background: var(--col-accent); transform: scale(1.3); }
+
+        .progress-bar-container {
+            height: 3px; background: #e0e0e0; width: 200px; margin: 10px auto; border-radius: 2px; overflow: hidden;
+        }
+        .progress-bar { height: 100%; background: var(--col-accent); width: 0; }
+
+        /* --- 6. MODALI TESTO (Servizi) --- */
+        .modal-info {
+            display: none; position: fixed; z-index: 3000;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(3px);
+            align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal-info-content {
+            background: white; padding: 40px; border-radius: 8px;
+            max-width: 500px; width: 100%; position: relative;
+            text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        .close-modal-info {
+            position: absolute; top: 15px; right: 20px;
+            font-size: 28px; cursor: pointer; color: #888;
+        }
+        .modal-info-content h3 { color: var(--col-accent); margin-bottom: 15px; }
+
+        /* --- 7. GALLERIA & LIGHTBOX (Zoom) --- */
+        #filterForm {
+            display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 30px;
+        }
+        #category {
+            padding: 10px 20px; border-radius: 5px; border: 1px solid #ccc;
+            font-family: var(--font-body); font-size: 16px;
+        }
+
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .custom-image {
+            width: 100%; height: 280px; object-fit: cover;
+            border-radius: 8px; cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            background: #e5e5e5; /* Fallback background */
+            position: relative;
+        }
+        .custom-image:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+
+        /* Lightbox */
+        .lightbox {
+            display: none; position: fixed; z-index: 4000;
+            left: 0; top: 0; width: 100%; height: 100%;
+            /* MODIFICA: Sfondo semi-trasparente con sfocatura */
+            background: rgba(0, 0, 0, 0.7); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); /* Per supporto Safari */
+            align-items: center; justify-content: center;
+        }
+        .lightbox.active { display: flex; }
+
+        .lightbox-img {
+            max-width: 90%; max-height: 85vh;
+            border: 4px solid white; border-radius: 4px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            object-fit: contain;
+            background: #333; /* Fallback */
+        }
+
+        .lightbox-close {
+            position: absolute; top: 20px; right: 30px;
+            color: white; font-size: 40px; cursor: pointer; transition: 0.3s; z-index: 4001;
+        }
+        .lightbox-close:hover { color: var(--col-accent); }
+
+        .lightbox-prev, .lightbox-next {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            color: white; font-size: 30px; padding: 15px;
+            background: rgba(255,255,255,0.1); border-radius: 50%;
+            cursor: pointer; transition: 0.3s; user-select: none; z-index: 4001;
+        }
+        .lightbox-prev:hover, .lightbox-next:hover { background: var(--col-accent); }
+        .lightbox-prev { left: 20px; }
+        .lightbox-next { right: 20px; }
+
+        /* --- 8. PREVENTIVO --- */
+        .simulator-container {
+            background: white; padding: 40px; border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-top: 30px;
+        }
+        
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: #666; }
+        
+        input, select, textarea {
+            width: 100%; padding: 14px; border: 1px solid #ddd;
+            border-radius: 6px; font-size: 16px; font-family: var(--font-body);
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus, textarea:focus { border-color: var(--col-accent); }
+
+        .form-columns { display: flex; flex-wrap: wrap; gap: 40px; }
+        .form-column { flex: 1; min-width: 300px; }
+
+        button {
+            background: var(--col-primary); color: white;
+            border: none; padding: 15px 40px; border-radius: 50px;
+            font-size: 16px; font-weight: 700; cursor: pointer;
+            transition: 0.3s; display: inline-block;
+        }
+        button:hover { background: var(--col-accent); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(196, 154, 108, 0.4); }
+
+        .result-container {
+            margin-top: 30px; padding: 30px; background: #FDFBF7;
+            border: 1px solid var(--col-accent); border-radius: 8px; display: none;
+        }
+        .total-price { font-family: var(--font-title); font-size: 2rem; color: var(--col-accent); font-weight: 700; }
+
+        /* --- 9. CONTATTI & FOOTER (LAYOUT IBRIDO) --- */
+        
+        /* Base: Mobile (Esattamente come richiesto) */
+        .contact-layout {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            text-align: left; /* Tassativo per mobile */
+        }
+
+        .contact-col {
+            /* Nessuna larghezza fissa o flex grow su mobile */
+        }
+
+        .contact-list li { margin-bottom: 15px; font-size: 18px; display: flex; align-items: center; gap: 10px; }
+        
+        /* Su mobile, i valori sono nascosti */
+        .values-col { display: none; }
+
+        /* Desktop: Layout avanzato */
+        @media (min-width: 1024px) {
+             .contact-layout {
+                 justify-content: center;
+                 /* SPOSTAMENTO A DESTRA RICHIESTO */
+                 padding-left: 150px; 
+                 flex-wrap: nowrap; /* Evita a capo su desktop */
+                 align-items: flex-start;
+             }
+             
+             .contact-col {
+                 flex: 1;
+                 min-width: 250px;
+             }
+
+             /* Mostra valori su desktop */
+             .values-col { display: block; }
+             
+             .contact-col-center {
+                 text-align: center;
+             }
+             .contact-col-center .contact-list {
+                 display: inline-block;
+                 text-align: left;
+             }
+
+             .contact-col-right {
+                 display: flex;
+                 flex-direction: column;
+                 align-items: flex-end;
+             }
+             .contact-col-right .values-list {
+                 text-align: left;
+             }
+        }
+
+        .contact-social { margin-top: 30px; font-size: 30px; display: flex; gap: 20px; justify-content: center; }
+        .contact-social a:hover { color: var(--col-accent); }
+
+        /* STILI VALORI */
+        .values-list { margin-top: 0; }
+        .value-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        .value-icon {
+            width: 40px; height: 40px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid var(--col-accent);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--col-accent);
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        footer {
+            background-color: #1a1a1a; color: #777; text-align: center; padding: 30px 0; font-size: 14px;
+        }
+        @media(max-width: 1023px) { footer { padding-bottom: 90px; } }
+
+        /* --- 10. ELEMENTI FLOTTANTI & WHATSAPP INTERATTIVO --- */
+        
+        /* Animazione "Pulse" (Battito) */
+        @keyframes pulse-green {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+
+        /* Animazione "Wiggle" (Tremolio) */
+        @keyframes wiggle {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+            75% { transform: rotate(-5deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        .whatsapp-float {
+            position: fixed; bottom: 90px; right: 20px;
+            width: 60px; height: 60px; background: #25D366;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 1500; transition: 0.3s;
+            /* Attiva l'animazione pulsante */
+            animation: pulse-green 2s infinite; 
+        }
+
+        .whatsapp-float img { width: 35px; }
+        
+        /* Interazione Hover: Ferma il battito, ingrandisce e fa tremare l'icona */
+        .whatsapp-float:hover { 
+            animation: none; /* Ferma il pulse */
+            transform: scale(1.1); /* Ingrandisce */
+        }
+        
+        .whatsapp-float:hover .whatsapp-icon {
+             animation: wiggle 0.5s ease-in-out; /* Tremolio icona */
+        }
+
+        /* Tooltip (Fumetto) */
+        .whatsapp-tooltip {
+            position: absolute;
+            right: 70px; /* Posizionato a sinistra del bottone */
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: white;
+            color: #333;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+        }
+        
+        /* Triangolino del tooltip */
+        .whatsapp-tooltip::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 6px 0 6px 6px;
+            border-style: solid;
+            border-color: transparent transparent transparent white;
+        }
+
+        /* Mostra il tooltip su hover */
+        .whatsapp-float:hover .whatsapp-tooltip {
+            opacity: 1;
+            visibility: visible;
+            right: 80px; /* Piccolo movimento di entrata */
+        }
+
+        @media(min-width: 1024px) { .whatsapp-float { bottom: 30px; } }
+
+        /* COOKIE BANNER CENTRATO */
+        .cookie-banner {
+            position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 400px; background: rgba(30,30,30,0.95);
+            color: white; padding: 20px; border-radius: 10px; text-align: center;
+            z-index: 5000; display: none;
+        }
+        /* Override per Desktop: mantieni centrato ma cambia altezza dal fondo */
+        @media(min-width: 1024px) { 
+            .cookie-banner { bottom: 30px; } 
+        }
+        
+        .cookie-btn { padding: 8px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin: 5px; }
+        .cookie-accept { background: var(--col-accent); color: white; }
+        .cookie-decline { background: #555; color: white; }
+
+    </style>
 </head>
 
 <body>
 
-    <!-- Cookie Banner -->
-    <div id="cookieBanner" class="cookie-banner">
-        <p style="margin-bottom:15px; font-size:14px;">Utilizziamo i cookie per offrirti la migliore esperienza. Continuando accetti la nostra policy.</p>
-        <button class="cookie-btn cookie-accept" id="acceptCookies">Accetta</button>
-        <button class="cookie-btn cookie-decline" id="continueWithoutCookies">Rifiuta</button>
-    </div>
-
-    <!-- HEADER DESKTOP -->
-    <header>
-        <div class="container">
-            <!-- Logo (Gestione Errore Immagine) -->
-            <a href="#">
-                <img src="img/Logo_grande_senzasfondo.png" alt="LuxuryWood Logo" class="logo" id="headerLogo">
-                <h2 class="logo-text-fallback" id="headerLogoText">LuxuryWood</h2>
-            </a>
-
-            <!-- Navigazione Desktop -->
-            <div class="mobile-hidden" style="align-items: center; gap: 40px;">
-                <ul class="desktop-menu">
-                    <li><a href="#servizi">Servizi</a></li>
-                    <li><a href="#chi-siamo">Chi Siamo</a></li>
-                    <li><a href="#foto-lavori">Lavori</a></li>
-                    <li><a href="#preventivo">Preventivo</a></li>
-                    <li><a href="#contatti">Contatti</a></li>
-                </ul>
-                <div class="header-contacts">
-                    <a href="tel:+393248985320" class="btn-contact-header"><i class="fas fa-phone"></i>+39 324 898 5320</a>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- MENU MOBILE BOTTOM (App Style) -->
-    <nav class="mobile-bottom-nav">
-        <a href="#" class="nav-item active">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-        </a>
-        <a href="#servizi" class="nav-item">
-            <i class="fas fa-tools"></i>
-            <span>Servizi</span>
-        </a>
-        <a href="#foto-lavori" class="nav-item">
-            <i class="fas fa-images"></i>
-            <span>Foto</span>
-        </a>
-        <a href="#preventivo" class="nav-item">
-            <i class="fas fa-calculator"></i>
-            <span>Prev.</span>
-        </a>
-        <a href="#contatti" class="nav-item">
-            <i class="fas fa-envelope"></i>
-            <span>Contatti</span>
-        </a>
-    </nav>
-
-    <!-- SERVIZI (Slider) -->
-    <section id="servizi" class="services">
-        <div class="container">
-            <!-- REMOVED REVEAL -->
-            <h2>I Nostri Servizi</h2>
-            <!-- REMOVED REVEAL -->
-            <div class="slider-container">
-                <div class="slider">
-                    <!-- Slides -->
-                    <div class="slide">
-                        <!-- ADDED FETCHPRIORITY -->
-                        <img src="img/corridoio_spina_di_pesce.jpeg" alt="Pavimento Spina" fetchpriority="high">
-                        <div class="slide-overlay">
-                            <h3>Pavimento a spina di pesce</h3>
-                            <button class="open-modal" data-modal="modal1">Dettagli</button>
-                        </div>
-                    </div>
-                    <div class="slide">
-                        <img src="img/parete_camera.jpeg" alt="Pareti Legno">
-                        <div class="slide-overlay">
-                            <h3>Realizzazioni pareti</h3>
-                            <button class="open-modal" data-modal="modal2">Dettagli</button>
-                        </div>
-                    </div>
-                    <div class="slide">
-                        <img src="img/restauro3.jpeg" alt="Restauro">
-                        <div class="slide-overlay">
-                            <h3>Restauro pavimenti</h3>
-                            <button class="open-modal" data-modal="modal3">Dettagli</button>
-                        </div>
-                    </div>
-                    <div class="slide">
-                        <img src="img/" alt="SPC">
-                        <div class="slide-overlay">
-                            <h3>SPC</h3>
-                            <button class="open-modal" data-modal="modal4">Dettagli</button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Controlli -->
-                <div id="prevSlide" class="nav-btn"><i class="fas fa-chevron-left"></i></div>
-                <div id="nextSlide" class="nav-btn"><i class="fas fa-chevron-right"></i></div>
-            </div>
-            
-            <div class="dots-container">
-                <span class="dot active" data-slide="0"></span>
-                <span class="dot" data-slide="1"></span>
-                <span class="dot" data-slide="2"></span>
-                <span class="dot" data-slide="3"></span>
-            </div>
-            <div class="progress-bar-container"><div class="progress-bar"></div></div>
-        </div>
-    </section>
-
-    <!-- Modali Informativi Servizi -->
-    <div id="modal1" class="modal-info">
-        <div class="modal-info-content">
-            <span class="close-modal-info">&times;</span>
-            <h3><i class="fas fa-layer-group"></i> Spina di Pesce</h3>
-            <p>La posa a spina di pesce non è un semplice rivestimento, ma un vero e 
-                proprio elemento di design capace di definire la personalità di un ambiente. 
-                La sua geometria distintiva crea un dialogo continuo con la luce naturale: 
-                grazie al diverso orientamento dei listelli, il legno acquista tridimensionalità 
-                e movimento, regalando alla stanza una percezione di maggiore ampiezza e respiro. 
-                È un classico dell'architettura che unisce dinamismo e prestigio. Realizziamo questa
-                posa con rigore sartoriale, curando ogni allineamento per offrire non solo un pavimento, 
-                ma un’opera di stile destinata a superare ogni moda.</p>
-        </div>
-    </div>
-    <div id="modal2" class="modal-info">
-        <div class="modal-info-content">
-            <span class="close-modal-info">&times;</span>
-            <h3><i class="fas fa-border-all"></i> Pareti in Legno</h3>
-            <p>Rivestire una parete in legno significa trasformare una semplice superficie muraria
-                in una scenografia naturale che avvolge e riscalda l’ambiente. È una scelta di carattere 
-                che cambia radicalmente la percezione della stanza, donando una sensazione di intimità e 
-                protezione che l'intonaco o la carta da parati non possono eguagliare. Oltre al forte impatto 
-                estetico, una parete in legno offre un comfort abitativo superiore: migliora l'isolamento acustico, 
-                attutisce i rumori e regola naturalmente l'umidità. Che si tratti di creare una continuità fluida 
-                con il pavimento o un contrasto materico deciso, realizziamo il rivestimento come un abito su misura, 
-                curando ogni giunzione per garantire una superficie perfetta alla vista e al tatto.</p>
-        </div>
-    </div>
-    <div id="modal3" class="modal-info">
-        <div class="modal-info-content">
-            <span class="close-modal-info">&times;</span>
-            <h3><i class="fas fa-magic"></i> Restauro</h3>
-            <p>Un pavimento in legno vissuto possiede un fascino inimitabile, un carattere scritto nelle venature e 
-                nelle sfumature che solo il tempo sa regalare. Il nostro intervento di restauro non è una semplice 
-                cancellazione dei segni di usura, ma una vera e propria opera di rinascita: lavoriamo per rimuovere 
-                la patina opaca del passato e svelare la bellezza autentica che ancora vive nella fibra, rispettando 
-                profondamente l'identità originale del materiale.
-                Attraverso una levigatura calibrata e l'applicazione di finiture protettive di ultima generazione, 
-                restituiamo al parquet la sua luminosità e la sua resistenza, esaltandone i contrasti naturali. 
-                Recuperare un pavimento esistente è una scelta di valore: significa trasformare un legno "spento" in 
-                una superficie vibrante, pronta ad affrontare una nuova stagione di splendore.</p>
-        </div>
-    </div>
-    <div id="modal4" class="modal-info">
-        <div class="modal-info-content">
-            <span class="close-modal-info">&times;</span>
-            <h3><i class="fas fa-fill-drip"></i>SPC</h3>
-            <p>Il pavimento in SPC rappresenta la nuova frontiera delle superfici tecniche: un materiale di ultima 
-                generazione che unisce la bellezza estetica del legno alla robustezza della pietra. Grazie al suo 
-                nucleo minerale rigido, garantisce una stabilità dimensionale e una resistenza all'usura senza precedenti.
-                È la soluzione ideale per chi cerca praticità senza rinunciare al design: essendo impermeabile al 100%, 
-                permette di avere l'effetto legno anche in ambienti umidi come bagni e cucine. Inoltre, il suo spessore 
-                ridotto lo rende perfetto per le ristrutturazioni, consentendo la posa in sovrapposizione senza dover 
-                demolire il pavimento esistente. Anche per l'SPC, manteniamo la nostra filosofia di eccellenza: selezioniamo 
-                solo prodotti da fornitori certificati, caratterizzati da texture iper-realistiche al tatto e sistemi di 
-                incastro precisi, per garantire un risultato estetico e funzionale di altissimo livello.</p>
-        </div>
-    </div>
-
-    <!-- CHI SIAMO -->
-    <section id="chi-siamo" class="about">
-        <div class="container">
-            <h2 class="reveal">Chi Siamo</h2>
-            <div class="reveal" style="max-width: 800px; margin: 0 auto; text-align: center;">
-                <p style="font-size: 18px; margin-bottom: 30px;">
-                 Con oltre 10 anni di esperienza, noi di <strong>LuxuryWood</strong> siamo il punto di riferimento per la realizzazione di 
-                 pavimenti in legno di alta gamma. La nostra azienda coniuga la cura maniacale dell'approccio artigianale con la massima 
-                professionalità gestionale.
-                Il nostro standard qualitativo nasce all'origine: collaboriamo esclusivamente con fornitori di eccellenza per selezionare 
-                materiali di pregio ed essenze nobili garantite. Seguiamo ogni cliente con una consulenza tecnica dedicata, dalla scelta 
-                iniziale fino alla posa finale. Il risultato è un servizio puntuale, pulito e di qualità superiore.
-                </p>
-                <div style="text-align: left; display: inline-block;">
-                    <ul style="font-size: 16px; line-height: 2;">
-                        <li><i class="fas fa-check" style="color: var(--col-accent); margin-right: 10px;"></i> Posa qualificata di Parquet, SPC e Resine</li>
-                        <li><i class="fas fa-check" style="color: var(--col-accent); margin-right: 10px;"></i> Restauro conservativo pavimenti antichi</li>
-                        <li><i class="fas fa-check" style="color: var(--col-accent); margin-right: 10px;"></i> Consulenza design e finiture su misura</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FOTO LAVORI (Con Lightbox Desktop/Mobile) -->
-    <section id="foto-lavori" class="photo">
-        <div class="container">
-            <h2 class="reveal">Galleria Realizzazioni</h2>
-            
-            <form id="filterForm" class="reveal">
-                <label for="category" style="font-weight: bold; margin-right: 10px;">Visualizza:</label>
-                <select id="category">
-                    <option value="tutte">Tutti i progetti</option>
-                    <option value="interni">Interni & Design</option>
-                    <option value="restauri">Restauri</option>
-                </select>
-            </form>
-
-            <div class="photo-gallery">
-                <!-- Cliccando si apre il Lightbox. Ho aggiunto la classe reveal ad ogni immagine -->
-                <img src="img/interno.jpeg" alt="Living Moderno" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(0)">
-                <img src="img/spinadipesce1.jpeg" alt="Dettaglio Spina" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(1)">
-                <img src="img/corridoio_spina_di_pesce.jpeg" alt="Corridoio a spina" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(2)">
-                <img src="img/ufficio.jpeg" alt="Ufficio Direzionale" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(3)">
-                <img src="img/parete_camera.jpeg" alt="Parete Boiserie" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(4)">
-                <!--<img src="img/interno2.jpeg" alt="Salone Classico" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(4)">-->
-                <img src="img/bagno.jpeg" alt="Bagno in Legno" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(5)">
-                <img src="img/restauro2.jpeg" alt="Restauro Villa" data-category="restauri tutte" class="custom-image reveal" onclick="openLightbox(6)">
-                <img src="img/restauro.jpeg" alt="Dettaglio Restauro" data-category="restauri tutte" class="custom-image reveal" onclick="openLightbox(7)">
-            </div>
-        </div>
-    </section>
-
-    <!-- LIGHTBOX (Zoom Immagini) -->
-    <div id="lightbox" class="lightbox">
-        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
-        <div class="lightbox-prev" onclick="changeLightboxImage(-1)">&#10094;</div>
-        <img src="" alt="Zoom" class="lightbox-img" id="lightboxImg">
-        <div class="lightbox-next" onclick="changeLightboxImage(1)">&#10095;</div>
-    </div>
-
-    <!-- PREVENTIVO -->
-    <section id="preventivo" class="preventivo">
-        <div class="container">
-            <h2 class="reveal">Richiedi Preventivo</h2>
-            <p class="reveal" style="text-align: center; margin-bottom: 30px;">Contattaci per un sopralluogo gratuito o usa il configuratore per una stima immediata.</p>
-
-            <!-- Form Contatto Rapido -->
-            <form id="contactForm" class="reveal" style="max-width: 600px; margin: 0 auto 40px auto;">
-                <div class="form-group">
-                    <input type="text" id="name" placeholder="Nome e Cognome">
-                </div>
-                <div class="form-group">
-                    <input type="email" id="email" placeholder="Indirizzo Email">
-                </div>
-                <div class="form-group">
-                    <textarea id="message" rows="4" placeholder="Descrivi la tua richiesta..."></textarea>
-                </div>
-                <div style="text-align: center;">
-                    <button type="button" id="sendEmailBtn">INVIA MESSAGGIO</button>
-                </div>
-            </form>
-
-            <div class="reveal" style="text-align: center;">
-                <p style="font-size: 14px; color: #888; margin-bottom: 15px;">Oppure prova il nostro calcolatore automatico:</p>
-                <button id="showQuoteBtn" style="background-color: var(--col-white); color: var(--col-primary); border: 2px solid var(--col-primary);">
-                    <i class="fas fa-calculator"></i> Apri Simulatore
-                </button>
-            </div>
-
-            <!-- Simulatore (Nascosto di default) -->
-            <div class="simulator-container" id="quoteForm" style="display:none;">
-                <form>
-                    <div class="form-columns">
-                        <div class="form-column">
-                            <div class="form-group">
-                                <label>Essenza Legno</label>
-                                <select id="woodType">
-                                    <option value="">Seleziona...</option>
-                                    <option value="rovere">Rovere (€45/m²)</option>
-                                    <option value="noce">Noce (€60/m²)</option>
-                                    <option value="teak">Teak (€75/m²)</option>
-                                    <option value="custom">Altro</option>
-                                </select>
-                            </div>
-                            <div class="form-group" id="customPriceGroup" style="display:none;">
-                                <label>Prezzo Personalizzato (€/m²)</label>
-                                <input type="number" id="customPrice">
-                            </div>
-                            <div class="form-group">
-                                <label>Superficie (m²)</label>
-                                <input type="number" id="surface">
-                            </div>
-                        </div>
-                        <div class="form-column">
-                            <div class="form-group">
-                                <label>Tipo di Posa</label>
-                                <select id="installationType">
-                                    <option value="flottante">Flottante (€15/m²)</option>
-                                    <option value="incollata">Incollata (€25/m²)</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Località Intervento</label>
-                                <select id="location">
-                                    <option value="urbano">Urbano (Standard)</option>
-                                    <option value="extraurbano">Extraurbano (+€50)</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Accessori</label>
-                                <select id="accessories" multiple style="height: 85px;">
-                                    <option value="battiscopa">Battiscopa Legno</option>
-                                    <option value="soglia">Soglia Raccordo</option>
-                                </select>
-                                <small style="display:block; margin-top:5px; color:#999; font-size:12px;">(Ctrl+Click per selezione multipla)</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div style="text-align:center; margin-top:30px;">
-                        <button type="button" id="calculateBtn">CALCOLA STIMA</button>
-                    </div>
-                </form>
-
-                <div class="result-container" id="resultContainer">
-                    <h3>Dettaglio Stima</h3>
-                    <div id="priceBreakdown" style="margin-bottom: 20px; line-height: 1.8;"></div>
-                    <div class="total-price" id="totalPrice"></div>
-                    <div style="margin-top:25px; display: flex; gap: 15px; justify-content: center;">
-                        <button id="resetBtn" style="background:#999; font-size: 14px;">Reset</button>
-                        <button id="downloadPdfBtn" style="background: var(--col-accent); font-size: 14px;"><i class="fas fa-file-pdf"></i> Scarica PDF</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CONTATTI -->
-    <section id="contatti" class="contact">
-        <div class="container">
-            <h2 class="reveal">Contatti</h2>
-            <div class="reveal" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; text-align: left;">
-                <div>
-                    <h3>Email</h3>
-                    <ul class="contact-list">
-                        <li><i class="fas fa-envelope"></i> luxurywoodpavimenti@gmail.com</li>
-                        <li><i class="fas fa-envelope"></i> luxurywood@upapec.it</li>
-                        <!--<li><i class="fas fa-map-marker-alt"></i>/li>-->
-                    </ul>
-                </div>
-                <div>
-                    <h3>Telefono</h3>
-                    <ul class="contact-list">
-                        <li><i class="fas fa-phone"></i> Agostino: 324 898 5320</li>
-                        <li><i class="fas fa-phone"></i> Niccolò: 392 385 0100</li>
-                    </ul>
-                </div>
-
-                <!-- Colonna Valori (Visibile solo su Desktop) -->
-                <div class="values-col">
-                    <h3>Perché Sceglierci</h3>
-                    <ul class="values-list">
-                        <li class="value-item">
-                            <div class="value-icon"><i class="fas fa-certificate"></i></div>
-                            <span>Materiali Certificati e Garantiti</span>
-                        </li>
-                        <li class="value-item">
-                            <div class="value-icon"><i class="fas fa-hammer"></i></div>
-                            <span>Posa Artigianale Qualificata</span>
-                        </li>
-                        <li class="value-item">
-                            <div class="value-icon"><i class="fas fa-leaf"></i></div>
-                            <span>Prodotti Eco-Friendly</span>
-                        </li>
-                        <li class="value-item">
-                            <div class="value-icon"><i class="fas fa-clock"></i></div>
-                            <span>Rispetto delle Tempistiche</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="contact-social reveal" style="justify-content: center;">
-                <a href="https://instagram.com/luxury_wood" target="_blank"><i class="fab fa-instagram"></i></a>
-                <a href="https://facebook.com/luxurywood" target="_blank"><i class="fab fa-facebook"></i></a>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <p>© 2025 LuxuryWood - Pavimenti d'autore - P.IVA 05325610284</p>
-    </footer>
-
-    <!-- Whatsapp Float -->
-    <a href="https://wa.me/393248985320" target="_blank" class="whatsapp-float">
-        <img src="img/whatsapp-2.png" alt="WhatsApp" class="whatsapp-icon" 
-             onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fab fa-whatsapp\' style=\'color:white; font-size:35px;\'></i>'">
-        <span class="whatsapp-tooltip">Chatta con noi!</span>
-    </a>
-
-    <!-- SCRIPT JS UNIFICATO -->
-    <script>
-        // --- GESTIONE ERRORE LOGO (Safe Fallback) ---
-        const logoImg = document.getElementById("headerLogo");
-        logoImg.onerror = function() {
-            this.style.display = "none";
-            document.getElementById("headerLogoText").style.display = "block";
-        };
-
-        // --- 1. COOKIE BANNER LOGIC ---
-        document.addEventListener("DOMContentLoaded", () => {
-            const banner = document.getElementById("cookieBanner");
-            // Controllo scadenza 24 ore
-            const consent = localStorage.getItem("cookieConsent");
-            const consentTime = localStorage.getItem("cookieConsentTime");
-            const now = new Date().getTime();
-            const twentyFourHours = 24 * 60 * 60 * 1000;
-
-            if (!consent || !consentTime || (now - consentTime > twentyFourHours)) {
-                // Scaduto o non settato: rimuovi e mostra banner
-                localStorage.removeItem("cookieConsent");
-                localStorage.removeItem("cookieConsentTime");
-                banner.style.display = "block";
-            }
-
-            document.getElementById("acceptCookies").addEventListener("click", () => {
-                localStorage.setItem("cookieConsent", "true");
-                localStorage.setItem("cookieConsentTime", new Date().getTime()); // Salva timestamp
-                banner.style.display = "none";
-            });
-            document.getElementById("continueWithoutCookies").addEventListener("click", () => {
-                banner.style.display = "none";
-            });
-        });
-
-        // --- 2. HEADER SCROLL EFFECT ---
-        window.addEventListener("scroll", () => {
-            const header = document.querySelector("header");
-            if (window.scrollY > 50) header.classList.add("scrolled");
-            else header.classList.remove("scrolled");
-        });
-
-        // --- 3. MOBILE NAVIGATION ACTIVE STATE ---
-        const sections = document.querySelectorAll("section");
-        const navItems = document.querySelectorAll(".nav-item");
-
-        window.addEventListener("scroll", () => {
-            let current = "";
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                if (pageYOffset >= (sectionTop - 150)) {
-                    current = section.getAttribute("id");
-                }
-            });
-
-            navItems.forEach(li => {
-                li.classList.remove("active");
-                if (li.getAttribute("href").includes(current)) {
-                    li.classList.add("active");
-                }
-            });
-        });
-
-        // --- 4. SLIDER SERVIZI & PROGRESS BAR LOGIC ---
-        const slider = document.querySelector(".slider");
-        const slides = document.querySelectorAll(".slide");
-        const dots = document.querySelectorAll(".dot");
-        let slideIndex = 0;
-        const totalSlides = slides.length;
-        let slideTimer = null;
-
-        // Funzione dedicata SOLO al reset della barra visiva
-        function resetProgressBar() {
-            const bar = document.querySelector(".progress-bar");
-            // Rimuoviamo la transizione per reset istantaneo a 0
-            bar.style.transition = 'none';
-            bar.style.width = '0%';
-            // Dopo un micro-ritardo, reimpostiamo la transizione per farla crescere
-            setTimeout(() => {
-                bar.style.transition = 'width 4s linear';
-                bar.style.width = '100%';
-            }, 50);
-        }
-
-        function updateSlider() {
-            slider.style.transform = `translateX(-${slideIndex * 100}%)`;
-            dots.forEach((dot, idx) => {
-                dot.classList.toggle("active", idx === slideIndex);
-            });
-            // Quando lo slider cambia automaticamente, resettiamo la barra
-            resetProgressBar(); 
-        }
-
-        function nextSlide() {
-            slideIndex = (slideIndex + 1) % totalSlides;
-            updateSlider();
-        }
-
-        function prevSlide() {
-            slideIndex = (slideIndex - 1 + totalSlides) % totalSlides;
-            updateSlider();
-        }
-
-        // Avvia il timer e sincronizza la barra
-        function startTimer() {
-            if (!slideTimer) {
-                slideTimer = setInterval(nextSlide, 4000);
-            }
-        }
-
-        // Ferma il timer
-        function stopTimer() {
-            if (slideTimer) {
-                clearInterval(slideTimer);
-                slideTimer = null;
-            }
-        }
-
-        // Gestione Click Manuale (Next/Prev)
-        document.getElementById("nextSlide").addEventListener("click", () => {
-            nextSlide(); 
-            // Reset manuale del timer per evitare sovrapposizioni
-            stopTimer();
-            startTimer();
-        });
-        document.getElementById("prevSlide").addEventListener("click", () => {
-            prevSlide(); 
-            stopTimer();
-            startTimer();
-        });
-
-        // Dot click
-        dots.forEach((dot, idx) => {
-            dot.addEventListener("click", () => {
-                slideIndex = idx;
-                updateSlider();
-                stopTimer();
-                startTimer();
-            });
-        });
-
-        // Avvio iniziale (Reset barra + Start Timer)
-        resetProgressBar();
-        startTimer();
-
-
-        // --- 5. MODALI SERVIZI & PAUSA CAROSELLO ---
-        const modalInfoList = document.querySelectorAll(".modal-info");
-        
-        document.querySelectorAll(".open-modal").forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                const id = e.target.dataset.modal;
-                document.getElementById(id).style.display = "flex";
-                // FERMA TUTTO quando apro il modale
-                stopTimer(); 
-            });
-        });
-
-        document.querySelectorAll(".close-modal-info").forEach(closeBtn => {
-            closeBtn.addEventListener("click", (e) => {
-                e.target.closest(".modal-info").style.display = "none";
-                // QUANDO CHIUDO: Resetta la barra visiva e fai ripartire il timer INSIEME
-                resetProgressBar();
-                startTimer(); 
-            });
-        });
-
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal-info')) {
-                event.target.style.display = "none";
-                // QUANDO CHIUDO (clic fuori): Resetta barra e timer
-                resetProgressBar();
-                startTimer();
-            }
-        }
-
-        // --- 6. FILTRO GALLERIA ---
-        const filterSelect = document.getElementById("category");
-        const allImages = document.querySelectorAll(".custom-image");
-        
-        filterSelect.addEventListener("change", () => {
-            const cat = filterSelect.value;
-            allImages.forEach(img => {
-                const categories = img.dataset.category.split(" ");
-                if (cat === "tutte" || categories.includes(cat)) {
-                    img.style.display = "block";
-                } else {
-                    img.style.display = "none";
-                }
-            });
-        });
-
-        // --- 7. LIGHTBOX (ZOOM) ---
-        const lightbox = document.getElementById("lightbox");
-        const lightboxImg = document.getElementById("lightboxImg");
-        let lightboxIndex = 0;
-        // Convert NodeList to Array for easy indexing
-        const imagesArray = Array.from(allImages);
-
-        function openLightbox(index) {
-            // Check visibility if filtered (optional refinement)
-            if (imagesArray[index].style.display === 'none') return;
-            
-            lightboxIndex = index;
-            lightboxImg.src = imagesArray[index].src;
-            lightbox.classList.add("active");
-            
-            // Handle keyboard navigation
-            document.addEventListener('keydown', handleLightboxKeys);
-        }
-
-        function closeLightbox() {
-            lightbox.classList.remove("active");
-            document.removeEventListener('keydown', handleLightboxKeys);
-        }
-
-        function changeLightboxImage(direction) {
-            let newIndex = lightboxIndex + direction;
-            
-            // Loop logic
-            if (newIndex >= imagesArray.length) newIndex = 0;
-            if (newIndex < 0) newIndex = imagesArray.length - 1;
-            
-            // Skip hidden images (if filtered)
-            let attempts = 0;
-            while (imagesArray[newIndex].style.display === 'none' && attempts < imagesArray.length) {
-                newIndex += direction;
-                if (newIndex >= imagesArray.length) newIndex = 0;
-                if (newIndex < 0) newIndex = imagesArray.length - 1;
-                attempts++;
-            }
-            
-            lightboxIndex = newIndex;
-            lightboxImg.src = imagesArray[lightboxIndex].src;
-        }
-
-        function handleLightboxKeys(e) {
-            if (e.key === "ArrowRight") changeLightboxImage(1);
-            if (e.key === "ArrowLeft") changeLightboxImage(-1);
-            if (e.key === "Escape") closeLightbox();
-        }
-
-        // Close on background click
-        lightbox.addEventListener("click", (e) => {
-            if (e.target === lightbox) closeLightbox();
-        });
-
-
-        // --- 8. CALCOLATORE PREVENTIVO ---
-        const quoteBtn = document.getElementById("showQuoteBtn");
-        const quoteForm = document.getElementById("quoteForm");
-        
-        quoteBtn.addEventListener("click", () => {
-            quoteForm.style.display = (quoteForm.style.display === "block") ? "none" : "block";
-            quoteBtn.innerHTML = (quoteForm.style.display === "block") 
-                ? '<i class="fas fa-times"></i> Chiudi Simulatore' 
-                : '<i class="fas fa-calculator"></i> Apri Simulatore';
-        });
-
-        document.getElementById("woodType").addEventListener("change", function() {
-            document.getElementById("customPriceGroup").style.display = 
-                (this.value === "custom") ? "block" : "none";
-        });
-
-        document.getElementById("calculateBtn").addEventListener("click", () => {
-            const woodVal = document.getElementById("woodType").value;
-            const surface = parseFloat(document.getElementById("surface").value);
-            
-            if (!woodVal || !surface) {
-                alert("Seleziona il tipo di legno e inserisci la superficie.");
-                return;
-            }
-
-            let pricePerSqm = 0;
-            if (woodVal === "custom") {
-                pricePerSqm = parseFloat(document.getElementById("customPrice").value) || 0;
-            } else {
-                const prices = { rovere: 45, noce: 60, teak: 75 };
-                pricePerSqm = prices[woodVal] || 0;
-            }
-
-            const installVal = document.getElementById("installationType").value;
-            const installPrice = (installVal === "incollata") ? 25 : 15;
-            
-            const locVal = document.getElementById("location").value;
-            const locPrice = (locVal === "extraurbano") ? 50 : 0;
-
-            // Accessori
-            const accessories = Array.from(document.getElementById("accessories").selectedOptions);
-            let accPrice = 0;
-            let accNames = [];
-            
-            accessories.forEach(opt => {
-                if (opt.value === "battiscopa") {
-                    // Stima perimetro: radice quadrata area * 4 * costo metro
-                    const perimeter = Math.sqrt(surface) * 4;
-                    accPrice += perimeter * 10; 
-                    accNames.push("Battiscopa");
-                }
-                if (opt.value === "soglia") {
-                    accPrice += 25;
-                    accNames.push("Soglia");
-                }
-            });
-
-            const materialTotal = pricePerSqm * surface;
-            const laborTotal = installPrice * surface;
-            const grandTotal = materialTotal + laborTotal + locPrice + accPrice;
-
-            document.getElementById("resultContainer").style.display = "block";
-            document.getElementById("totalPrice").innerText = "Totale Stimato: € " + grandTotal.toFixed(2);
-            document.getElementById("priceBreakdown").innerHTML = `
-                <strong>Materiale (${woodVal}):</strong> €${materialTotal.toFixed(2)}<br>
-                <strong>Manodopera (${installVal}):</strong> €${laborTotal.toFixed(2)}<br>
-                <strong>Trasferta:</strong> €${locPrice.toFixed(2)}<br>
-                <strong>Accessori (${accNames.join(", ") || "Nessuno"}):</strong> €${accPrice.toFixed(2)}
-            `;
-        });
-
-        document.getElementById("resetBtn").addEventListener("click", () => {
-            document.querySelector("#quoteForm form").reset();
-            document.getElementById("resultContainer").style.display = "none";
-            document.getElementById("customPriceGroup").style.display = "none";
-        });
-
-        // --- 9. EMAIL & PDF ---
-        document.getElementById("sendEmailBtn").addEventListener("click", () => {
-            const name = document.getElementById("name").value;
-            const body = document.getElementById("message").value;
-            if(!name || !body) { alert("Inserisci nome e messaggio"); return; }
-            window.location.href = `mailto:luxurywoodpavimenti@gmail.com?subject=Richiesta da ${name}&body=${encodeURIComponent(body)}`;
-        });
-
-        document.getElementById("downloadPdfBtn").addEventListener("click", () => {
-            if (!window.jspdf) { alert("Errore caricamento libreria PDF."); return; }
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(22);
-            doc.setTextColor(196, 154, 108); // Color Oro
-            doc.text("LUXURY WOOD - Preventivo", 20, 20);
-            
-            doc.setFontSize(12);
-            doc.setTextColor(0, 0, 0);
-            doc.setFont("helvetica", "normal");
-            
-            const details = document.getElementById("priceBreakdown").innerText;
-            const total = document.getElementById("totalPrice").innerText;
-            
-            doc.text(details, 20, 40);
-            
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(16);
-            doc.text(total, 20, 100);
-            
-            doc.setFontSize(10);
-            doc.setTextColor(100);
-            doc.text("Questo documento è una stima non vincolante.", 20, 120);
-            
-            doc.save("Preventivo_LuxuryWood.pdf");
-        });
-
-        // --- 10. SCROLL REVEAL (ANIMAZIONI SCROLL) ---
-        const observerOptions = {
-            threshold: 0.15, // Scatta quando il 15% dell'elemento è visibile
-            rootMargin: "0px 0px -50px 0px"
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                } else {
-                    // RIMUOVE la classe active quando l'elemento esce dallo schermo
-                    // permettendo all'animazione di ripetersi quando si rientra.
-                    entry.target.classList.remove('active');
-                }
-            });
-        }, observerOptions);
-
-        // Seleziona tutti gli elementi con classe 'reveal'
-        document.querySelectorAll('.reveal').forEach(el => {
-            observer.observe(el);
-        });
-
-    </script>
+    <!-- Cookie Banner -->
+    <div id="cookieBanner" class="cookie-banner">
+        <p style="margin-bottom:15px; font-size:14px;">Utilizziamo i cookie per offrirti la migliore esperienza. Continuando accetti la nostra policy.</p>
+        <button class="cookie-btn cookie-accept" id="acceptCookies">Accetta</button>
+        <button class="cookie-btn cookie-decline" id="continueWithoutCookies">Rifiuta</button>
+    </div>
+
+    <!-- HEADER DESKTOP -->
+    <header>
+        <div class="container">
+            <!-- Logo (Gestione Errore Immagine) -->
+            <a href="#">
+                <img src="img/Logo_grande_senzasfondo.png" alt="LuxuryWood Logo" class="logo" id="headerLogo">
+                <h2 class="logo-text-fallback" id="headerLogoText">LuxuryWood</h2>
+            </a>
+
+            <!-- Navigazione Desktop -->
+            <div class="mobile-hidden" style="align-items: center; gap: 40px;">
+                <ul class="desktop-menu">
+                    <li><a href="#servizi">Servizi</a></li>
+                    <li><a href="#chi-siamo">Chi Siamo</a></li>
+                    <li><a href="#foto-lavori">Lavori</a></li>
+                    <li><a href="#preventivo">Preventivo</a></li>
+                    <li><a href="#contatti">Contatti</a></li>
+                </ul>
+                <div class="header-contacts">
+                    <a href="tel:+393248985320" class="btn-contact-header"><i class="fas fa-phone"></i>+39 324 898 5320</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MENU MOBILE BOTTOM (App Style) -->
+    <nav class="mobile-bottom-nav">
+        <a href="#" class="nav-item active">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="#servizi" class="nav-item">
+            <i class="fas fa-tools"></i>
+            <span>Servizi</span>
+        </a>
+        <a href="#foto-lavori" class="nav-item">
+            <i class="fas fa-images"></i>
+            <span>Foto</span>
+        </a>
+        <a href="#preventivo" class="nav-item">
+            <i class="fas fa-calculator"></i>
+            <span>Prev.</span>
+        </a>
+        <a href="#contatti" class="nav-item">
+            <i class="fas fa-envelope"></i>
+            <span>Contatti</span>
+        </a>
+    </nav>
+
+    <!-- SERVIZI (Slider) -->
+    <section id="servizi" class="services">
+        <div class="container">
+            <h2 class="reveal">I Nostri Servizi</h2>
+            <div class="slider-container reveal">
+                <div class="slider">
+                    <!-- Slides -->
+                    <div class="slide">
+                        <img src="img/corridoio_spina_di_pesce.jpeg" alt="Pavimento Spina" fetchpriority="high">
+                        <div class="slide-overlay">
+                            <h3>Pavimento a spina di pesce</h3>
+                            <button class="open-modal" data-modal="modal1">Dettagli</button>
+                        </div>
+                    </div>
+                    <div class="slide">
+                        <img src="img/parete_camera.jpeg" alt="Pareti Legno">
+                        <div class="slide-overlay">
+                            <h3>Realizzazioni pareti</h3>
+                            <button class="open-modal" data-modal="modal2">Dettagli</button>
+                        </div>
+                    </div>
+                    <div class="slide">
+                        <img src="img/restauro3.jpeg" alt="Restauro">
+                        <div class="slide-overlay">
+                            <h3>Restauro pavimenti</h3>
+                            <button class="open-modal" data-modal="modal3">Dettagli</button>
+                        </div>
+                    </div>
+                    <div class="slide">
+                        <img src="img/spc_floor.jpeg" alt="SPC">
+                        <div class="slide-overlay">
+                            <h3>SPC</h3>
+                            <button class="open-modal" data-modal="modal4">Dettagli</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Controlli -->
+                <div id="prevSlide" class="nav-btn"><i class="fas fa-chevron-left"></i></div>
+                <div id="nextSlide" class="nav-btn"><i class="fas fa-chevron-right"></i></div>
+            </div>
+            
+            <div class="dots-container">
+                <span class="dot active" data-slide="0"></span>
+                <span class="dot" data-slide="1"></span>
+                <span class="dot" data-slide="2"></span>
+                <span class="dot" data-slide="3"></span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar"></div></div>
+        </div>
+    </section>
+
+    <!-- Modali Informativi Servizi -->
+    <div id="modal1" class="modal-info">
+        <div class="modal-info-content">
+            <span class="close-modal-info">&times;</span>
+            <h3><i class="fas fa-layer-group"></i> Spina di Pesce</h3>
+            <p>La posa a spina di pesce non è un semplice rivestimento, ma un vero e 
+                proprio elemento di design capace di definire la personalità di un ambiente. 
+                La sua geometria distintiva crea un dialogo continuo con la luce naturale: 
+                grazie al diverso orientamento dei listelli, il legno acquista tridimensionalità 
+                e movimento, regalando alla stanza una percezione di maggiore ampiezza e respiro. 
+                È un classico dell'architettura che unisce dinamismo e prestigio. Realizziamo questa
+                posa con rigore sartoriale, curando ogni allineamento per offrire non solo un pavimento, 
+                ma un’opera di stile destinata a superare ogni moda.</p>
+        </div>
+    </div>
+    <div id="modal2" class="modal-info">
+        <div class="modal-info-content">
+            <span class="close-modal-info">&times;</span>
+            <h3><i class="fas fa-border-all"></i> Pareti in Legno</h3>
+            <p>Rivestire una parete in legno significa trasformare una semplice superficie muraria
+                in una scenografia naturale che avvolge e riscalda l’ambiente. È una scelta di carattere 
+                che cambia radicalmente la percezione della stanza, donando una sensazione di intimità e 
+                protezione che l'intonaco o la carta da parati non possono eguagliare. Oltre al forte impatto 
+                estetico, una parete in legno offre un comfort abitativo superiore: migliora l'isolamento acustico, 
+                attutisce i rumori e regola naturalmente l'umidità. Che si tratti di creare una continuità fluida 
+                con il pavimento o un contrasto materico deciso, realizziamo il rivestimento come un abito su misura, 
+                curando ogni giunzione per garantire una superficie perfetta alla vista e al tatto.</p>
+        </div>
+    </div>
+    <div id="modal3" class="modal-info">
+        <div class="modal-info-content">
+            <span class="close-modal-info">&times;</span>
+            <h3><i class="fas fa-magic"></i> Restauro</h3>
+            <p>Un pavimento in legno vissuto possiede un fascino inimitabile, un carattere scritto nelle venature e 
+                nelle sfumature che solo il tempo sa regalare. Il nostro intervento di restauro non è una semplice 
+                cancellazione dei segni di usura, ma una vera e propria opera di rinascita: lavoriamo per rimuovere 
+                la patina opaca del passato e svelare la bellezza autentica che ancora vive nella fibra, rispettando 
+                profondamente l'identità originale del materiale.
+                Attraverso una levigatura calibrata e l'applicazione di finiture protettive di ultima generazione, 
+                restituiamo al parquet la sua luminosità e la sua resistenza, esaltandone i contrasti naturali. 
+                Recuperare un pavimento esistente è una scelta di valore: significa trasformare un legno "spento" in 
+                una superficie vibrante, pronta ad affrontare una nuova stagione di splendore.</p>
+        </div>
+    </div>
+    <div id="modal4" class="modal-info">
+        <div class="modal-info-content">
+            <span class="close-modal-info">&times;</span>
+            <h3><i class="fas fa-fill-drip"></i>SPC</h3>
+            <p>Il pavimento in SPC rappresenta la nuova frontiera delle superfici tecniche: un materiale di ultima 
+                generazione che unisce la bellezza estetica del legno alla robustezza della pietra. Grazie al suo 
+                nucleo minerale rigido, garantisce una stabilità dimensionale e una resistenza all'usura senza precedenti.
+                È la soluzione ideale per chi cerca praticità senza rinunciare al design: essendo impermeabile al 100%, 
+                permette di avere l'effetto legno anche in ambienti umidi come bagni e cucine. Inoltre, il suo spessore 
+                ridotto lo rende perfetto per le ristrutturazioni, consentendo la posa in sovrapposizione senza dover 
+                demolire il pavimento esistente. Anche per l'SPC, manteniamo la nostra filosofia di eccellenza: selezioniamo 
+                solo prodotti da fornitori certificati, caratterizzati da texture iper-realistiche al tatto e sistemi di 
+                incastro precisi, per garantire un risultato estetico e funzionale di altissimo livello.</p>
+        </div>
+    </div>
+
+    <!-- CHI SIAMO -->
+    <section id="chi-siamo" class="about">
+        <div class="container">
+            <h2 class="reveal">Chi Siamo</h2>
+            <div class="reveal" style="max-width: 800px; margin: 0 auto; text-align: center;">
+                <p style="font-size: 18px; margin-bottom: 30px;">
+                 Con oltre 10 anni di esperienza, noi di <strong>LuxuryWood</strong> siamo il punto di riferimento per la realizzazione di 
+                 pavimenti in legno di alta gamma. La nostra azienda coniuga la cura maniacale dell'approccio artigianale con la massima 
+                professionalità gestionale.
+                Il nostro standard qualitativo nasce all'origine: collaboriamo esclusivamente con fornitori di eccellenza per selezionare 
+                materiali di pregio ed essenze nobili garantite. Seguiamo ogni cliente con una consulenza tecnica dedicata, dalla scelta 
+                iniziale fino alla posa finale. Il risultato è un servizio puntuale, pulito e di qualità superiore.
+                </p>
+                <div style="text-align: left; display: inline-block;">
+                    <ul style="font-size: 16px; line-height: 2;">
+                        <li><i class="fas fa-check" style="color: var(--col-accent); margin-right: 10px;"></i> Posa qualificata di Parquet, SPC e Resine</li>
+                        <li><i class="fas fa-check" style="color: var(--col-accent); margin-right: 10px;"></i> Restauro conservativo pavimenti antichi</li>
+                        <li><i class="fas fa-check" style="color: var(--col-accent); margin-right: 10px;"></i> Consulenza design e finiture su misura</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOTO LAVORI (Con Lightbox Desktop/Mobile) -->
+    <section id="foto-lavori" class="photo">
+        <div class="container">
+            <h2 class="reveal">Galleria Realizzazioni</h2>
+            
+            <form id="filterForm" class="reveal">
+                <label for="category" style="font-weight: bold; margin-right: 10px;">Visualizza:</label>
+                <select id="category">
+                    <option value="tutte">Tutti i progetti</option>
+                    <option value="interni">Interni & Design</option>
+                    <option value="restauri">Restauri</option>
+                </select>
+            </form>
+
+            <div class="photo-gallery">
+                <!-- Cliccando si apre il Lightbox. Ho aggiunto la classe reveal ad ogni immagine -->
+                <img src="img/interno.jpeg" alt="Living Moderno" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(0)">
+                <img src="img/spinadipesce1.jpeg" alt="Dettaglio Spina" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(1)">
+                <img src="img/corridoio_spina_di_pesce.jpeg" alt="Corridoio a spina" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(2)">
+                <img src="img/ufficio.jpeg" alt="Ufficio Direzionale" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(3)">
+                <img src="img/parete_camera.jpeg" alt="Parete Boiserie" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(4)">
+                <!--<img src="img/interno2.jpeg" alt="Salone Classico" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(4)">-->
+                <img src="img/bagno.jpeg" alt="Bagno in Legno" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(5)">
+                <img src="img/restauro2.jpeg" alt="Restauro Villa" data-category="restauri tutte" class="custom-image reveal" onclick="openLightbox(6)">
+                <img src="img/restauro.jpeg" alt="Dettaglio Restauro" data-category="restauri tutte" class="custom-image reveal" onclick="openLightbox(7)">
+            </div>
+        </div>
+    </section>
+
+    <!-- LIGHTBOX (Zoom Immagini) -->
+    <div id="lightbox" class="lightbox">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <div class="lightbox-prev" onclick="changeLightboxImage(-1)">&#10094;</div>
+        <img src="" alt="Zoom" class="lightbox-img" id="lightboxImg">
+        <div class="lightbox-next" onclick="changeLightboxImage(1)">&#10095;</div>
+    </div>
+
+    <!-- PREVENTIVO -->
+    <section id="preventivo" class="preventivo">
+        <div class="container">
+            <h2 class="reveal">Richiedi Preventivo</h2>
+            <p class="reveal" style="text-align: center; margin-bottom: 30px;">Contattaci per un sopralluogo gratuito o usa il configuratore per una stima immediata.</p>
+
+            <!-- Form Contatto Rapido -->
+            <form id="contactForm" class="reveal" style="max-width: 600px; margin: 0 auto 40px auto;">
+                <div class="form-group">
+                    <input type="text" id="name" placeholder="Nome e Cognome">
+                </div>
+                <div class="form-group">
+                    <input type="email" id="email" placeholder="Indirizzo Email">
+                </div>
+                <div class="form-group">
+                    <textarea id="message" rows="4" placeholder="Descrivi la tua richiesta..."></textarea>
+                </div>
+                <div style="text-align: center;">
+                    <button type="button" id="sendEmailBtn">INVIA MESSAGGIO</button>
+                </div>
+            </form>
+
+            <div class="reveal" style="text-align: center;">
+                <p style="font-size: 14px; color: #888; margin-bottom: 15px;">Oppure prova il nostro calcolatore automatico:</p>
+                <button id="showQuoteBtn" style="background-color: var(--col-white); color: var(--col-primary); border: 2px solid var(--col-primary);">
+                    <i class="fas fa-calculator"></i> Apri Simulatore
+                </button>
+            </div>
+
+            <!-- Simulatore (Nascosto di default) -->
+            <div class="simulator-container" id="quoteForm" style="display:none;">
+                <form>
+                    <div class="form-columns">
+                        <div class="form-column">
+                            <div class="form-group">
+                                <label>Essenza Legno</label>
+                                <select id="woodType">
+                                    <option value="">Seleziona...</option>
+                                    <option value="rovere">Rovere (€45/m²)</option>
+                                    <option value="noce">Noce (€60/m²)</option>
+                                    <option value="teak">Teak (€75/m²)</option>
+                                    <option value="custom">Altro</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="customPriceGroup" style="display:none;">
+                                <label>Prezzo Personalizzato (€/m²)</label>
+                                <input type="number" id="customPrice">
+                            </div>
+                            <div class="form-group">
+                                <label>Superficie (m²)</label>
+                                <input type="number" id="surface">
+                            </div>
+                        </div>
+                        <div class="form-column">
+                            <div class="form-group">
+                                <label>Tipo di Posa</label>
+                                <select id="installationType">
+                                    <option value="flottante">Flottante (€15/m²)</option>
+                                    <option value="incollata">Incollata (€25/m²)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Località Intervento</label>
+                                <select id="location">
+                                    <option value="urbano">Urbano (Standard)</option>
+                                    <option value="extraurbano">Extraurbano (+€50)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Accessori</label>
+                                <select id="accessories" multiple style="height: 85px;">
+                                    <option value="battiscopa">Battiscopa Legno</option>
+                                    <option value="soglia">Soglia Raccordo</option>
+                                </select>
+                                <small style="display:block; margin-top:5px; color:#999; font-size:12px;">(Ctrl+Click per selezione multipla)</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align:center; margin-top:30px;">
+                        <button type="button" id="calculateBtn">CALCOLA STIMA</button>
+                    </div>
+                </form>
+
+                <div class="result-container" id="resultContainer">
+                    <h3>Dettaglio Stima</h3>
+                    <div id="priceBreakdown" style="margin-bottom: 20px; line-height: 1.8;"></div>
+                    <div class="total-price" id="totalPrice"></div>
+                    <div style="margin-top:25px; display: flex; gap: 15px; justify-content: center;">
+                        <button id="resetBtn" style="background:#999; font-size: 14px;">Reset</button>
+                        <button id="downloadPdfBtn" style="background: var(--col-accent); font-size: 14px;"><i class="fas fa-file-pdf"></i> Scarica PDF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTATTI (NUOVO LAYOUT) -->
+    <section id="contatti" class="contact">
+        <div class="container">
+            <h2 class="reveal">Contatti</h2>
+            
+            <div class="contact-layout reveal">
+                <!-- Colonna Sinistra: Email -->
+                <div class="contact-col contact-col-left">
+                    <h3><i class="fas fa-envelope-open-text" style="color:var(--col-accent);"></i> Scrivici</h3>
+                    <ul class="contact-list">
+                        <li><i class="fas fa-envelope"></i> luxurywoodpavimenti@gmail.com</li>
+                        <li><i class="fas fa-envelope"></i> luxurywood@upapec.it</li>
+                    </ul>
+                </div>
+
+                <!-- Colonna Centrale: Telefono (Evidenziata) -->
+                <div class="contact-col contact-col-center">
+                    <h3><i class="fas fa-phone-volume" style="color:var(--col-accent);"></i> Chiamaci</h3>
+                    <ul class="contact-list" style="font-weight: bold;">
+                        <li><i class="fas fa-mobile-alt"></i> Agostino: 324 898 5320</li>
+                        <li><i class="fas fa-mobile-alt"></i> Niccolò: 392 385 0100</li>
+                    </ul>
+                </div>
+
+                <!-- Colonna Destra: Valori (Nascosta su mobile) -->
+                <div class="contact-col contact-col-right values-col">
+                    <h3><i class="fas fa-star" style="color:var(--col-accent);"></i> Perché Noi</h3>
+                    <ul class="values-list">
+                        <li class="value-item">
+                            <div class="value-icon"><i class="fas fa-certificate"></i></div>
+                            <span>Materiali Certificati e Garantiti</span>
+                        </li>
+                        <li class="value-item">
+                            <div class="value-icon"><i class="fas fa-hammer"></i></div>
+                            <span>Posa Artigianale Qualificata</span>
+                        </li>
+                        <li class="value-item">
+                            <div class="value-icon"><i class="fas fa-leaf"></i></div>
+                            <span>Prodotti Eco-Friendly</span>
+                        </li>
+                        <li class="value-item">
+                            <div class="value-icon"><i class="fas fa-clock"></i></div>
+                            <span>Rispetto delle Tempistiche</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="contact-social reveal">
+                <a href="https://instagram.com/luxury_wood" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://facebook.com/luxurywood" target="_blank"><i class="fab fa-facebook"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2025 LuxuryWood - Pavimenti d'autore - P.IVA 05325610284</p>
+    </footer>
+
+    <!-- Whatsapp Float -->
+    <a href="https://wa.me/393248985320" target="_blank" class="whatsapp-float">
+        <img src="img/whatsapp-2.png" alt="WhatsApp" class="whatsapp-icon" 
+             onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fab fa-whatsapp\' style=\'color:white; font-size:35px;\'></i>'">
+        <span class="whatsapp-tooltip">Chatta con noi!</span>
+    </a>
+
+    <!-- SCRIPT JS UNIFICATO -->
+    <script>
+        // --- GESTIONE ERRORE LOGO (Safe Fallback) ---
+        const logoImg = document.getElementById("headerLogo");
+        logoImg.onerror = function() {
+            this.style.display = "none";
+            document.getElementById("headerLogoText").style.display = "block";
+        };
+
+        // --- 1. COOKIE BANNER LOGIC ---
+        document.addEventListener("DOMContentLoaded", () => {
+            const banner = document.getElementById("cookieBanner");
+            // Controllo scadenza 24 ore
+            const consent = localStorage.getItem("cookieConsent");
+            const consentTime = localStorage.getItem("cookieConsentTime");
+            const now = new Date().getTime();
+            const twentyFourHours = 24 * 60 * 60 * 1000;
+
+            if (!consent || !consentTime || (now - consentTime > twentyFourHours)) {
+                // Scaduto o non settato: rimuovi e mostra banner
+                localStorage.removeItem("cookieConsent");
+                localStorage.removeItem("cookieConsentTime");
+                banner.style.display = "block";
+            }
+
+            document.getElementById("acceptCookies").addEventListener("click", () => {
+                localStorage.setItem("cookieConsent", "true");
+                localStorage.setItem("cookieConsentTime", new Date().getTime()); // Salva timestamp
+                banner.style.display = "none";
+            });
+            document.getElementById("continueWithoutCookies").addEventListener("click", () => {
+                banner.style.display = "none";
+            });
+        });
+
+        // --- 2. HEADER SCROLL EFFECT ---
+        window.addEventListener("scroll", () => {
+            const header = document.querySelector("header");
+            if (window.scrollY > 50) header.classList.add("scrolled");
+            else header.classList.remove("scrolled");
+        });
+
+        // --- 3. MOBILE NAVIGATION ACTIVE STATE ---
+        const sections = document.querySelectorAll("section");
+        const navItems = document.querySelectorAll(".nav-item");
+
+        window.addEventListener("scroll", () => {
+            let current = "";
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 150)) {
+                    current = section.getAttribute("id");
+                }
+            });
+
+            navItems.forEach(li => {
+                li.classList.remove("active");
+                if (li.getAttribute("href").includes(current)) {
+                    li.classList.add("active");
+                }
+            });
+        });
+
+        // --- 4. SLIDER SERVIZI & PROGRESS BAR LOGIC ---
+        const slider = document.querySelector(".slider");
+        const slides = document.querySelectorAll(".slide");
+        const dots = document.querySelectorAll(".dot");
+        let slideIndex = 0;
+        const totalSlides = slides.length;
+        let slideTimer = null;
+
+        // Funzione per animare la barra
+        function animateProgressBar() {
+            const bar = document.querySelector(".progress-bar");
+            // Rimuovi transizione per reset immediato a 0
+            bar.style.transition = 'none';
+            bar.style.width = '0%';
+            
+            // Timeout minimo per permettere al browser di registrare width: 0%
+            setTimeout(() => {
+                bar.style.transition = 'width 4s linear';
+                bar.style.width = '100%';
+            }, 50);
+        }
+
+        // Funzione per congelare la barra (pausa)
+        function freezeProgressBar() {
+            const bar = document.querySelector(".progress-bar");
+            // Ottieni la larghezza attuale calcolata
+            const computedStyle = window.getComputedStyle(bar);
+            const currentWidth = computedStyle.getPropertyValue('width');
+            
+            // Ferma la transizione e fissa la larghezza al valore corrente
+            bar.style.transition = 'none';
+            bar.style.width = currentWidth;
+        }
+
+        function updateSlider() {
+            slider.style.transform = `translateX(-${slideIndex * 100}%)`;
+            dots.forEach((dot, idx) => {
+                dot.classList.toggle("active", idx === slideIndex);
+            });
+            // Quando si cambia slide, parte una nuova animazione
+            animateProgressBar(); 
+        }
+
+        function nextSlide() {
+            slideIndex = (slideIndex + 1) % totalSlides;
+            updateSlider();
+        }
+
+        function prevSlide() {
+            slideIndex = (slideIndex - 1 + totalSlides) % totalSlides;
+            updateSlider();
+        }
+
+        // Avvia il timer (nuovo ciclo)
+        function startTimer() {
+            // Assicurati che non ce ne sia già uno
+            if (slideTimer) clearInterval(slideTimer); 
+            
+            // Fai partire l'animazione della barra
+            animateProgressBar();
+            
+            // Imposta l'intervallo per la prossima slide
+            slideTimer = setInterval(nextSlide, 4000);
+        }
+
+        // Ferma il timer e congela la barra
+        function stopTimer() {
+            if (slideTimer) {
+                clearInterval(slideTimer);
+                slideTimer = null;
+                freezeProgressBar();
+            }
+        }
+
+        // Gestione Click Manuale (Next/Prev)
+        document.getElementById("nextSlide").addEventListener("click", () => {
+            nextSlide(); 
+            // Reset manuale del timer
+            if (slideTimer) clearInterval(slideTimer);
+            startTimer();
+        });
+        document.getElementById("prevSlide").addEventListener("click", () => {
+            prevSlide(); 
+            if (slideTimer) clearInterval(slideTimer);
+            startTimer();
+        });
+
+        // Dot click
+        dots.forEach((dot, idx) => {
+            dot.addEventListener("click", () => {
+                slideIndex = idx;
+                updateSlider();
+                if (slideTimer) clearInterval(slideTimer);
+                startTimer();
+            });
+        });
+
+        // Avvio iniziale
+        startTimer();
+
+
+        // --- 5. MODALI SERVIZI & PAUSA CAROSELLO ---
+        const modalInfoList = document.querySelectorAll(".modal-info");
+        
+        document.querySelectorAll(".open-modal").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                const id = e.target.dataset.modal;
+                document.getElementById(id).style.display = "flex";
+                
+                // STOPPA IL TIMER QUANDO SI APRE IL DETTAGLIO
+                stopTimer(); 
+            });
+        });
+
+        document.querySelectorAll(".close-modal-info").forEach(closeBtn => {
+            closeBtn.addEventListener("click", (e) => {
+                e.target.closest(".modal-info").style.display = "none";
+                
+                // RIPRENDE IL TIMER QUANDO SI CHIUDE (Senza cambiare slide subito)
+                // Usiamo startTimer che riavvia animazione e contatore
+                startTimer(); 
+            });
+        });
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal-info')) {
+                event.target.style.display = "none";
+                // RIPRENDE IL TIMER SE SI CLICCA FUORI
+                startTimer();
+            }
+        }
+
+        // --- 6. FILTRO GALLERIA ---
+        const filterSelect = document.getElementById("category");
+        const allImages = document.querySelectorAll(".custom-image");
+        
+        filterSelect.addEventListener("change", () => {
+            const cat = filterSelect.value;
+            allImages.forEach(img => {
+                const categories = img.dataset.category.split(" ");
+                if (cat === "tutte" || categories.includes(cat)) {
+                    img.style.display = "block";
+                } else {
+                    img.style.display = "none";
+                }
+            });
+        });
+
+        // --- 7. LIGHTBOX (ZOOM) ---
+        const lightbox = document.getElementById("lightbox");
+        const lightboxImg = document.getElementById("lightboxImg");
+        let lightboxIndex = 0;
+        // Convert NodeList to Array for easy indexing
+        const imagesArray = Array.from(allImages);
+
+        function openLightbox(index) {
+            // Check visibility if filtered (optional refinement)
+            if (imagesArray[index].style.display === 'none') return;
+            
+            lightboxIndex = index;
+            lightboxImg.src = imagesArray[index].src;
+            lightbox.classList.add("active");
+            
+            // Handle keyboard navigation
+            document.addEventListener('keydown', handleLightboxKeys);
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove("active");
+            document.removeEventListener('keydown', handleLightboxKeys);
+        }
+
+        function changeLightboxImage(direction) {
+            let newIndex = lightboxIndex + direction;
+            
+            // Loop logic
+            if (newIndex >= imagesArray.length) newIndex = 0;
+            if (newIndex < 0) newIndex = imagesArray.length - 1;
+            
+            // Skip hidden images (if filtered)
+            let attempts = 0;
+            while (imagesArray[newIndex].style.display === 'none' && attempts < imagesArray.length) {
+                newIndex += direction;
+                if (newIndex >= imagesArray.length) newIndex = 0;
+                if (newIndex < 0) newIndex = imagesArray.length - 1;
+                attempts++;
+            }
+            
+            lightboxIndex = newIndex;
+            lightboxImg.src = imagesArray[lightboxIndex].src;
+        }
+
+        function handleLightboxKeys(e) {
+            if (e.key === "ArrowRight") changeLightboxImage(1);
+            if (e.key === "ArrowLeft") changeLightboxImage(-1);
+            if (e.key === "Escape") closeLightbox();
+        }
+
+        // Close on background click
+        lightbox.addEventListener("click", (e) => {
+            if (e.target === lightbox) closeLightbox();
+        });
+
+
+        // --- 8. CALCOLATORE PREVENTIVO ---
+        const quoteBtn = document.getElementById("showQuoteBtn");
+        const quoteForm = document.getElementById("quoteForm");
+        
+        quoteBtn.addEventListener("click", () => {
+            quoteForm.style.display = (quoteForm.style.display === "block") ? "none" : "block";
+            quoteBtn.innerHTML = (quoteForm.style.display === "block") 
+                ? '<i class="fas fa-times"></i> Chiudi Simulatore' 
+                : '<i class="fas fa-calculator"></i> Apri Simulatore';
+        });
+
+        document.getElementById("woodType").addEventListener("change", function() {
+            document.getElementById("customPriceGroup").style.display = 
+                (this.value === "custom") ? "block" : "none";
+        });
+
+        document.getElementById("calculateBtn").addEventListener("click", () => {
+            const woodVal = document.getElementById("woodType").value;
+            const surface = parseFloat(document.getElementById("surface").value);
+            
+            if (!woodVal || !surface) {
+                alert("Seleziona il tipo di legno e inserisci la superficie.");
+                return;
+            }
+
+            let pricePerSqm = 0;
+            if (woodVal === "custom") {
+                pricePerSqm = parseFloat(document.getElementById("customPrice").value) || 0;
+            } else {
+                const prices = { rovere: 45, noce: 60, teak: 75 };
+                pricePerSqm = prices[woodVal] || 0;
+            }
+
+            const installVal = document.getElementById("installationType").value;
+            const installPrice = (installVal === "incollata") ? 25 : 15;
+            
+            const locVal = document.getElementById("location").value;
+            const locPrice = (locVal === "extraurbano") ? 50 : 0;
+
+            // Accessori
+            const accessories = Array.from(document.getElementById("accessories").selectedOptions);
+            let accPrice = 0;
+            let accNames = [];
+            
+            accessories.forEach(opt => {
+                if (opt.value === "battiscopa") {
+                    // Stima perimetro: radice quadrata area * 4 * costo metro
+                    const perimeter = Math.sqrt(surface) * 4;
+                    accPrice += perimeter * 10; 
+                    accNames.push("Battiscopa");
+                }
+                if (opt.value === "soglia") {
+                    accPrice += 25;
+                    accNames.push("Soglia");
+                }
+            });
+
+            const materialTotal = pricePerSqm * surface;
+            const laborTotal = installPrice * surface;
+            const grandTotal = materialTotal + laborTotal + locPrice + accPrice;
+
+            document.getElementById("resultContainer").style.display = "block";
+            document.getElementById("totalPrice").innerText = "Totale Stimato: € " + grandTotal.toFixed(2);
+            document.getElementById("priceBreakdown").innerHTML = `
+                <strong>Materiale (${woodVal}):</strong> €${materialTotal.toFixed(2)}<br>
+                <strong>Manodopera (${installVal}):</strong> €${laborTotal.toFixed(2)}<br>
+                <strong>Trasferta:</strong> €${locPrice.toFixed(2)}<br>
+                <strong>Accessori (${accNames.join(", ") || "Nessuno"}):</strong> €${accPrice.toFixed(2)}
+            `;
+        });
+
+        document.getElementById("resetBtn").addEventListener("click", () => {
+            document.querySelector("#quoteForm form").reset();
+            document.getElementById("resultContainer").style.display = "none";
+            document.getElementById("customPriceGroup").style.display = "none";
+        });
+
+        // --- 9. EMAIL & PDF ---
+        document.getElementById("sendEmailBtn").addEventListener("click", () => {
+            const name = document.getElementById("name").value;
+            const body = document.getElementById("message").value;
+            if(!name || !body) { alert("Inserisci nome e messaggio"); return; }
+            window.location.href = `mailto:luxurywoodpavimenti@gmail.com?subject=Richiesta da ${name}&body=${encodeURIComponent(body)}`;
+        });
+
+        document.getElementById("downloadPdfBtn").addEventListener("click", () => {
+            if (!window.jspdf) { alert("Errore caricamento libreria PDF."); return; }
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(22);
+            doc.setTextColor(196, 154, 108); // Color Oro
+            doc.text("LUXURY WOOD - Preventivo", 20, 20);
+            
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
+            doc.setFont("helvetica", "normal");
+            
+            const details = document.getElementById("priceBreakdown").innerText;
+            const total = document.getElementById("totalPrice").innerText;
+            
+            doc.text(details, 20, 40);
+            
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(16);
+            doc.text(total, 20, 100);
+            
+            doc.setFontSize(10);
+            doc.setTextColor(100);
+            doc.text("Questo documento è una stima non vincolante.", 20, 120);
+            
+            doc.save("Preventivo_LuxuryWood.pdf");
+        });
+
+        // --- 10. SCROLL REVEAL (ANIMAZIONI SCROLL) ---
+        const observerOptions = {
+            threshold: 0.15, // Scatta quando il 15% dell'elemento è visibile
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                } else {
+                    // RIMUOVE la classe active quando l'elemento esce dallo schermo
+                    // permettendo all'animazione di ripetersi quando si rientra.
+                    entry.target.classList.remove('active');
+                }
+            });
+        }, observerOptions);
+
+        // Seleziona tutti gli elementi con classe 'reveal'
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+    </script>
 </body>
 </html>
