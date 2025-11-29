@@ -49,6 +49,8 @@
             line-height: 1.6;
             /* Spazio extra in basso per il menu mobile */
             padding-bottom: var(--nav-mobile-height); 
+            /* Importante per evitare scroll orizzontale durante le animazioni */
+            overflow-x: hidden; 
         }
 
         /* Rimuove il padding bottom su desktop */
@@ -76,6 +78,18 @@
             width: 90%;
             max-width: 1200px;
             margin: 0 auto;
+        }
+
+        /* --- ANIMAZIONI SCROLL REVEAL --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px); /* Parte dal basso */
+            transition: all 0.8s ease-out; /* Durata e fluidità */
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* --- 2. HEADER (DESKTOP) --- */
@@ -374,7 +388,10 @@
         .lightbox {
             display: none; position: fixed; z-index: 4000;
             left: 0; top: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
+            /* MODIFICA: Sfondo semi-trasparente con sfocatura */
+            background: rgba(0, 0, 0, 0.7); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); /* Per supporto Safari */
             align-items: center; justify-content: center;
         }
         .lightbox.active { display: flex; }
@@ -447,15 +464,83 @@
         /* Padding extra nel footer per non coprire il copyright con la navbar mobile */
         @media(max-width: 1023px) { footer { padding-bottom: 90px; } }
 
-        /* --- 10. ELEMENTI FLOTTANTI --- */
+        /* --- 10. ELEMENTI FLOTTANTI & WHATSAPP INTERATTIVO --- */
+        
+        /* Animazione "Pulse" (Battito) */
+        @keyframes pulse-green {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+
+        /* Animazione "Wiggle" (Tremolio) */
+        @keyframes wiggle {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+            75% { transform: rotate(-5deg); }
+            100% { transform: rotate(0deg); }
+        }
+
         .whatsapp-float {
             position: fixed; bottom: 90px; right: 20px;
             width: 60px; height: 60px; background: #25D366;
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 1500; transition: 0.3s;
+            /* Attiva l'animazione pulsante */
+            animation: pulse-green 2s infinite; 
         }
+
         .whatsapp-float img { width: 35px; }
-        .whatsapp-float:hover { transform: scale(1.1); }
+        
+        /* Interazione Hover: Ferma il battito, ingrandisce e fa tremare l'icona */
+        .whatsapp-float:hover { 
+            animation: none; /* Ferma il pulse */
+            transform: scale(1.1); /* Ingrandisce */
+        }
+        
+        .whatsapp-float:hover .whatsapp-icon {
+             animation: wiggle 0.5s ease-in-out; /* Tremolio icona */
+        }
+
+        /* Tooltip (Fumetto) */
+        .whatsapp-tooltip {
+            position: absolute;
+            right: 70px; /* Posizionato a sinistra del bottone */
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: white;
+            color: #333;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+        }
+        
+        /* Triangolino del tooltip */
+        .whatsapp-tooltip::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 6px 0 6px 6px;
+            border-style: solid;
+            border-color: transparent transparent transparent white;
+        }
+
+        /* Mostra il tooltip su hover */
+        .whatsapp-float:hover .whatsapp-tooltip {
+            opacity: 1;
+            visibility: visible;
+            right: 80px; /* Piccolo movimento di entrata */
+        }
+
         @media(min-width: 1024px) { .whatsapp-float { bottom: 30px; } }
 
         .cookie-banner {
@@ -534,8 +619,8 @@
     <!-- SERVIZI (Slider) -->
     <section id="servizi" class="services">
         <div class="container">
-            <h2>I Nostri Servizi</h2>
-            <div class="slider-container">
+            <h2 class="reveal">I Nostri Servizi</h2>
+            <div class="slider-container reveal">
                 <div class="slider">
                     <!-- Slides -->
                     <div class="slide">
@@ -645,8 +730,8 @@
     <!-- CHI SIAMO -->
     <section id="chi-siamo" class="about">
         <div class="container">
-            <h2>Chi Siamo</h2>
-            <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+            <h2 class="reveal">Chi Siamo</h2>
+            <div class="reveal" style="max-width: 800px; margin: 0 auto; text-align: center;">
                 <p style="font-size: 18px; margin-bottom: 30px;">
                  Con oltre 10 anni di esperienza, noi di <strong>LuxuryWood</strong> siamo il punto di riferimento per la realizzazione di 
                  pavimenti in legno di alta gamma. La nostra azienda coniuga la cura maniacale dell'approccio artigianale con la massima 
@@ -669,9 +754,9 @@
     <!-- FOTO LAVORI (Con Lightbox Desktop/Mobile) -->
     <section id="foto-lavori" class="photo">
         <div class="container">
-            <h2>Galleria Realizzazioni</h2>
+            <h2 class="reveal">Galleria Realizzazioni</h2>
             
-            <form id="filterForm">
+            <form id="filterForm" class="reveal">
                 <label for="category" style="font-weight: bold; margin-right: 10px;">Visualizza:</label>
                 <select id="category">
                     <option value="tutte">Tutti i progetti</option>
@@ -681,16 +766,16 @@
             </form>
 
             <div class="photo-gallery">
-                <!-- Cliccando si apre il Lightbox -->
-                <img src="img/interno.jpeg" alt="Living Moderno" data-category="interni tutte" class="custom-image" onclick="openLightbox(0)">
-                <img src="img/spinadipesce1.jpeg" alt="Dettaglio Spina" data-category="interni tutte" class="custom-image" onclick="openLightbox(1)">
-                <img src="img/corridoio_spina_di_pesce.jpeg" alt="Corridoio a spina" data-category="interni tutte" class="custom-image" onclick="openLightbox(2)">
-                <img src="img/ufficio.jpeg" alt="Ufficio Direzionale" data-category="interni tutte" class="custom-image" onclick="openLightbox(3)">
-                <img src="img/parete_camera.jpeg" alt="Parete Boiserie" data-category="interni tutte" class="custom-image" onclick="openLightbox(4)">
-                <!--<img src="img/interno2.jpeg" alt="Salone Classico" data-category="interni tutte" class="custom-image" onclick="openLightbox(4)">-->
-                <img src="img/bagno.jpeg" alt="Bagno in Legno" data-category="interni tutte" class="custom-image" onclick="openLightbox(5)">
-                <img src="img/restauro2.jpeg" alt="Restauro Villa" data-category="restauri tutte" class="custom-image" onclick="openLightbox(6)">
-                <img src="img/restauro.jpeg" alt="Dettaglio Restauro" data-category="restauri tutte" class="custom-image" onclick="openLightbox(7)">
+                <!-- Cliccando si apre il Lightbox. Ho aggiunto la classe reveal ad ogni immagine -->
+                <img src="img/interno.jpeg" alt="Living Moderno" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(0)">
+                <img src="img/spinadipesce1.jpeg" alt="Dettaglio Spina" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(1)">
+                <img src="img/corridoio_spina_di_pesce.jpeg" alt="Corridoio a spina" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(2)">
+                <img src="img/ufficio.jpeg" alt="Ufficio Direzionale" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(3)">
+                <img src="img/parete_camera.jpeg" alt="Parete Boiserie" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(4)">
+                <!--<img src="img/interno2.jpeg" alt="Salone Classico" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(4)">-->
+                <img src="img/bagno.jpeg" alt="Bagno in Legno" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(5)">
+                <img src="img/restauro2.jpeg" alt="Restauro Villa" data-category="restauri tutte" class="custom-image reveal" onclick="openLightbox(6)">
+                <img src="img/restauro.jpeg" alt="Dettaglio Restauro" data-category="restauri tutte" class="custom-image reveal" onclick="openLightbox(7)">
             </div>
         </div>
     </section>
@@ -706,11 +791,11 @@
     <!-- PREVENTIVO -->
     <section id="preventivo" class="preventivo">
         <div class="container">
-            <h2>Richiedi Preventivo</h2>
-            <p style="text-align: center; margin-bottom: 30px;">Contattaci per un sopralluogo gratuito o usa il configuratore per una stima immediata.</p>
+            <h2 class="reveal">Richiedi Preventivo</h2>
+            <p class="reveal" style="text-align: center; margin-bottom: 30px;">Contattaci per un sopralluogo gratuito o usa il configuratore per una stima immediata.</p>
 
             <!-- Form Contatto Rapido -->
-            <form id="contactForm" style="max-width: 600px; margin: 0 auto 40px auto;">
+            <form id="contactForm" class="reveal" style="max-width: 600px; margin: 0 auto 40px auto;">
                 <div class="form-group">
                     <input type="text" id="name" placeholder="Nome e Cognome">
                 </div>
@@ -725,7 +810,7 @@
                 </div>
             </form>
 
-            <div style="text-align: center;">
+            <div class="reveal" style="text-align: center;">
                 <p style="font-size: 14px; color: #888; margin-bottom: 15px;">Oppure prova il nostro calcolatore automatico:</p>
                 <button id="showQuoteBtn" style="background-color: var(--col-white); color: var(--col-primary); border: 2px solid var(--col-primary);">
                     <i class="fas fa-calculator"></i> Apri Simulatore
@@ -802,8 +887,8 @@
     <!-- CONTATTI -->
     <section id="contatti" class="contact">
         <div class="container">
-            <h2>Contatti</h2>
-            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; text-align: left;">
+            <h2 class="reveal">Contatti</h2>
+            <div class="reveal" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; text-align: left;">
                 <div>
                     <h3>Email</h3>
                     <ul class="contact-list">
@@ -820,7 +905,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="contact-social" style="justify-content: center;">
+            <div class="contact-social reveal" style="justify-content: center;">
                 <a href="https://instagram.com/luxury_wood" target="_blank"><i class="fab fa-instagram"></i></a>
                 <a href="https://facebook.com/luxurywood" target="_blank"><i class="fab fa-facebook"></i></a>
             </div>
@@ -833,8 +918,9 @@
 
     <!-- Whatsapp Float -->
     <a href="https://wa.me/393248985320" target="_blank" class="whatsapp-float">
-        <img src="img/whatsapp-2.png" alt="WhatsApp" style="width:35px; height:35px; object-fit:contain;" 
+        <img src="img/whatsapp-2.png" alt="WhatsApp" class="whatsapp-icon" 
              onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fab fa-whatsapp\' style=\'color:white; font-size:35px;\'></i>'">
+        <span class="whatsapp-tooltip">Chatta con noi!</span>
     </a>
 
     <!-- SCRIPT JS UNIFICATO -->
@@ -849,12 +935,22 @@
         // --- 1. COOKIE BANNER LOGIC ---
         document.addEventListener("DOMContentLoaded", () => {
             const banner = document.getElementById("cookieBanner");
-            if (!localStorage.getItem("cookieConsent")) {
+            // Controllo scadenza 24 ore
+            const consent = localStorage.getItem("cookieConsent");
+            const consentTime = localStorage.getItem("cookieConsentTime");
+            const now = new Date().getTime();
+            const twentyFourHours = 24 * 60 * 60 * 1000;
+
+            if (!consent || !consentTime || (now - consentTime > twentyFourHours)) {
+                // Scaduto o non settato: rimuovi e mostra banner
+                localStorage.removeItem("cookieConsent");
+                localStorage.removeItem("cookieConsentTime");
                 banner.style.display = "block";
             }
 
             document.getElementById("acceptCookies").addEventListener("click", () => {
                 localStorage.setItem("cookieConsent", "true");
+                localStorage.setItem("cookieConsentTime", new Date().getTime()); // Salva timestamp
                 banner.style.display = "none";
             });
             document.getElementById("continueWithoutCookies").addEventListener("click", () => {
@@ -1157,6 +1253,28 @@
             doc.text("Questo documento è una stima non vincolante.", 20, 120);
             
             doc.save("Preventivo_LuxuryWood.pdf");
+        });
+
+        // --- 10. SCROLL REVEAL (ANIMAZIONI SCROLL) ---
+        // Funzione per animare gli elementi quando entrano nella viewport
+        const observerOptions = {
+            threshold: 0.15, // Scatta quando il 15% dell'elemento è visibile
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    // Opzionale: smette di osservare dopo l'animazione
+                    // observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Seleziona tutti gli elementi con classe 'reveal'
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
         });
 
     </script>
