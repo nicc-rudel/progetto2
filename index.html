@@ -8,6 +8,9 @@
     <title>LuxuryWood | Pavimenti d'Eccellenza</title>
     <meta name="description" content="LuxuryWood è un'azienda specializzata nella posa e restauro di pavimenti in legno di pregio.">
 
+    <!-- Preload Immagine Hero (Cruciale per velocità) -->
+    <link rel="preload" as="image" href="img/corridoio_spina_di_pesce.jpeg">
+
     <!-- Font Eleganti (Google Fonts) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -115,11 +118,6 @@
             width: 100%;
         }
 
-       /* .logo {
-            height: 100px; 
-            width: auto;
-            object-fit: contain;
-        }*/
         .logo {
             height: 300px;
             width: auto;
@@ -458,6 +456,42 @@
         .contact-social { margin-top: 30px; font-size: 30px; display: flex; gap: 20px; }
         .contact-social a:hover { color: var(--col-accent); }
 
+        /* --- STILI VALORI (Desktop Only) --- */
+        .values-col {
+            flex: 1;
+            min-width: 300px;
+            border-left: 1px solid rgba(255,255,255,0.2);
+            padding-left: 40px;
+            display: none; /* Nascosto su mobile di default */
+        }
+        
+        @media(min-width: 1024px) {
+            .values-col { display: block; }
+        }
+
+        .values-list {
+            margin-top: 20px;
+        }
+        .value-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        .value-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid var(--col-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--col-accent);
+            font-size: 18px;
+        }
+
         footer {
             background-color: #1a1a1a; color: #777; text-align: center; padding: 30px 0; font-size: 14px;
         }
@@ -543,13 +577,17 @@
 
         @media(min-width: 1024px) { .whatsapp-float { bottom: 30px; } }
 
+        /* COOKIE BANNER CENTRATO */
         .cookie-banner {
             position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
             width: 90%; max-width: 400px; background: rgba(30,30,30,0.95);
             color: white; padding: 20px; border-radius: 10px; text-align: center;
             z-index: 5000; display: none;
         }
-        @media(min-width: 1024px) { .cookie-banner { bottom: 30px; left: 30px; transform: none; } }
+        /* Override per Desktop: mantieni centrato ma cambia altezza dal fondo */
+        @media(min-width: 1024px) { 
+            .cookie-banner { bottom: 30px; } 
+        }
         
         .cookie-btn { padding: 8px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin: 5px; }
         .cookie-accept { background: var(--col-accent); color: white; }
@@ -619,12 +657,15 @@
     <!-- SERVIZI (Slider) -->
     <section id="servizi" class="services">
         <div class="container">
-            <h2 class="reveal">I Nostri Servizi</h2>
-            <div class="slider-container reveal">
+            <!-- REMOVED REVEAL -->
+            <h2>I Nostri Servizi</h2>
+            <!-- REMOVED REVEAL -->
+            <div class="slider-container">
                 <div class="slider">
                     <!-- Slides -->
                     <div class="slide">
-                        <img src="img/corridoio_spina_di_pesce.jpeg" alt="Pavimento Spina">
+                        <!-- ADDED FETCHPRIORITY -->
+                        <img src="img/corridoio_spina_di_pesce.jpeg" alt="Pavimento Spina" fetchpriority="high">
                         <div class="slide-overlay">
                             <h3>Pavimento a spina di pesce</h3>
                             <button class="open-modal" data-modal="modal1">Dettagli</button>
@@ -904,7 +945,31 @@
                         <li><i class="fas fa-phone"></i> Niccolò: 392 385 0100</li>
                     </ul>
                 </div>
+
+                <!-- Colonna Valori (Visibile solo su Desktop) -->
+                <div class="values-col">
+                    <h3>Perché Sceglierci</h3>
+                    <ul class="values-list">
+                        <li class="value-item">
+                            <div class="value-icon"><i class="fas fa-certificate"></i></div>
+                            <span>Materiali Certificati e Garantiti</span>
+                        </li>
+                        <li class="value-item">
+                            <div class="value-icon"><i class="fas fa-hammer"></i></div>
+                            <span>Posa Artigianale Qualificata</span>
+                        </li>
+                        <li class="value-item">
+                            <div class="value-icon"><i class="fas fa-leaf"></i></div>
+                            <span>Prodotti Eco-Friendly</span>
+                        </li>
+                        <li class="value-item">
+                            <div class="value-icon"><i class="fas fa-clock"></i></div>
+                            <span>Rispetto delle Tempistiche</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
+
             <div class="contact-social reveal" style="justify-content: center;">
                 <a href="https://instagram.com/luxury_wood" target="_blank"><i class="fab fa-instagram"></i></a>
                 <a href="https://facebook.com/luxurywood" target="_blank"><i class="fab fa-facebook"></i></a>
@@ -987,26 +1052,34 @@
             });
         });
 
-        // --- 4. SLIDER SERVIZI ---
+        // --- 4. SLIDER SERVIZI & PROGRESS BAR LOGIC ---
         const slider = document.querySelector(".slider");
         const slides = document.querySelectorAll(".slide");
         const dots = document.querySelectorAll(".dot");
         let slideIndex = 0;
         const totalSlides = slides.length;
+        let slideTimer = null;
+
+        // Funzione dedicata SOLO al reset della barra visiva
+        function resetProgressBar() {
+            const bar = document.querySelector(".progress-bar");
+            // Rimuoviamo la transizione per reset istantaneo a 0
+            bar.style.transition = 'none';
+            bar.style.width = '0%';
+            // Dopo un micro-ritardo, reimpostiamo la transizione per farla crescere
+            setTimeout(() => {
+                bar.style.transition = 'width 4s linear';
+                bar.style.width = '100%';
+            }, 50);
+        }
 
         function updateSlider() {
             slider.style.transform = `translateX(-${slideIndex * 100}%)`;
             dots.forEach((dot, idx) => {
                 dot.classList.toggle("active", idx === slideIndex);
             });
-            // Reset progress bar animation
-            const bar = document.querySelector(".progress-bar");
-            bar.style.transition = 'none';
-            bar.style.width = '0%';
-            setTimeout(() => {
-                bar.style.transition = 'width 4s linear';
-                bar.style.width = '100%';
-            }, 50);
+            // Quando lo slider cambia automaticamente, resettiamo la barra
+            resetProgressBar(); 
         }
 
         function nextSlide() {
@@ -1019,11 +1092,32 @@
             updateSlider();
         }
 
+        // Avvia il timer e sincronizza la barra
+        function startTimer() {
+            if (!slideTimer) {
+                slideTimer = setInterval(nextSlide, 4000);
+            }
+        }
+
+        // Ferma il timer
+        function stopTimer() {
+            if (slideTimer) {
+                clearInterval(slideTimer);
+                slideTimer = null;
+            }
+        }
+
+        // Gestione Click Manuale (Next/Prev)
         document.getElementById("nextSlide").addEventListener("click", () => {
-            nextSlide(); resetTimer();
+            nextSlide(); 
+            // Reset manuale del timer per evitare sovrapposizioni
+            stopTimer();
+            startTimer();
         });
         document.getElementById("prevSlide").addEventListener("click", () => {
-            prevSlide(); resetTimer();
+            prevSlide(); 
+            stopTimer();
+            startTimer();
         });
 
         // Dot click
@@ -1031,40 +1125,43 @@
             dot.addEventListener("click", () => {
                 slideIndex = idx;
                 updateSlider();
-                resetTimer();
+                stopTimer();
+                startTimer();
             });
         });
 
-        let slideTimer = setInterval(nextSlide, 4000);
-        function resetTimer() {
-            clearInterval(slideTimer);
-            slideTimer = setInterval(nextSlide, 4000);
-        }
-        // Start immediately
-        setTimeout(() => { document.querySelector(".progress-bar").style.width = '100%'; }, 100);
+        // Avvio iniziale (Reset barra + Start Timer)
+        resetProgressBar();
+        startTimer();
 
 
-        // --- 5. MODALI SERVIZI ---
+        // --- 5. MODALI SERVIZI & PAUSA CAROSELLO ---
         const modalInfoList = document.querySelectorAll(".modal-info");
+        
         document.querySelectorAll(".open-modal").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 const id = e.target.dataset.modal;
                 document.getElementById(id).style.display = "flex";
-                clearInterval(slideTimer);
+                // FERMA TUTTO quando apro il modale
+                stopTimer(); 
             });
         });
 
         document.querySelectorAll(".close-modal-info").forEach(closeBtn => {
             closeBtn.addEventListener("click", (e) => {
                 e.target.closest(".modal-info").style.display = "none";
-                resetTimer();
+                // QUANDO CHIUDO: Resetta la barra visiva e fai ripartire il timer INSIEME
+                resetProgressBar();
+                startTimer(); 
             });
         });
 
         window.onclick = function(event) {
             if (event.target.classList.contains('modal-info')) {
                 event.target.style.display = "none";
-                resetTimer();
+                // QUANDO CHIUDO (clic fuori): Resetta barra e timer
+                resetProgressBar();
+                startTimer();
             }
         }
 
@@ -1256,7 +1353,6 @@
         });
 
         // --- 10. SCROLL REVEAL (ANIMAZIONI SCROLL) ---
-        // Funzione per animare gli elementi quando entrano nella viewport
         const observerOptions = {
             threshold: 0.15, // Scatta quando il 15% dell'elemento è visibile
             rootMargin: "0px 0px -50px 0px"
@@ -1266,8 +1362,10 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('active');
-                    // Opzionale: smette di osservare dopo l'animazione
-                    // observer.unobserve(entry.target);
+                } else {
+                    // RIMUOVE la classe active quando l'elemento esce dallo schermo
+                    // permettendo all'animazione di ripetersi quando si rientra.
+                    entry.target.classList.remove('active');
                 }
             });
         }, observerOptions);
