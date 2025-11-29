@@ -389,7 +389,8 @@
             border: 1px solid #ccc; /* Leggero bordo */
             border-radius: 30px;
             background: transparent;
-            color: #666;
+            /* MODIFICA: Colore più scuro per leggibilità */
+            color: var(--col-primary); /* Era #666 */
             font-family: var(--font-body);
             font-size: 14px;
             font-weight: 600;
@@ -399,9 +400,12 @@
             letter-spacing: 1px;
         }
 
-        .filter-btn:hover {
-            border-color: var(--col-accent);
-            color: var(--col-accent);
+        /* MODIFICA: Hover solo su dispositivi con mouse per evitare sticky hover su mobile */
+        @media (hover: hover) {
+            .filter-btn:hover {
+                border-color: var(--col-accent);
+                color: var(--col-accent);
+            }
         }
 
         .filter-btn.active {
