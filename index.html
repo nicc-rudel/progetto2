@@ -328,7 +328,7 @@
         }
         .open-modal:hover { transform: scale(1.05); background: var(--col-accent-hover); }
 
-        /* Frecce Slider */
+        /* Frecce Slider (Style Base) */
         .nav-btn {
             position: absolute; top: 50%; transform: translateY(-50%);
             background: rgba(255,255,255,0.2); backdrop-filter: blur(5px);
@@ -468,28 +468,31 @@
             transform: rotate(90deg); /* Piacevole rotazione al passaggio */
         }
 
+        /* Frecce Lightbox Stile "I Nostri Servizi" */
         .lightbox-prev, .lightbox-next {
             position: absolute; top: 50%; transform: translateY(-50%);
-            color: rgba(255,255,255,0.6); 
-            font-size: 50px; 
-            padding: 20px;
-            /* Rimossa background circle */
-            background: transparent; 
-            border-radius: 0;
+            /* Copiato stile da .nav-btn ma adattato alle dimensioni fullscreen */
+            background: rgba(255,255,255,0.2); 
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.5);
+            color: white; 
+            width: 50px; height: 50px; /* Leggermente più grandi */
+            border-radius: 50%; 
             cursor: pointer; 
-            transition: all 0.3s; 
-            user-select: none; 
             z-index: 4001;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.3s;
+            font-size: 20px; /* Dimensione icona */
         }
         
         .lightbox-prev:hover, .lightbox-next:hover { 
-            color: var(--col-accent); 
-            background: transparent;
-            transform: translateY(-50%) scale(1.2); /* Leggero ingrandimento */
+            background: var(--col-accent); 
+            border-color: var(--col-accent);
+            transform: translateY(-50%) scale(1.1); /* Leggero ingrandimento */
         }
         
-        .lightbox-prev { left: 20px; }
-        .lightbox-next { right: 20px; }
+        .lightbox-prev { left: 30px; }
+        .lightbox-next { right: 30px; }
 
         /* --- 8. PREVENTIVO --- */
         .simulator-container {
@@ -788,9 +791,9 @@
     <!-- LIGHTBOX (Zoom Immagini) -->
     <div id="lightbox" class="lightbox">
         <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
-        <div class="lightbox-prev" onclick="changeLightboxImage(-1)">&#10094;</div>
+        <div class="lightbox-prev" onclick="changeLightboxImage(-1)"><i class="fas fa-chevron-left"></i></div>
         <img src="" alt="Zoom" class="lightbox-img" id="lightboxImg">
-        <div class="lightbox-next" onclick="changeLightboxImage(1)">&#10095;</div>
+        <div class="lightbox-next" onclick="changeLightboxImage(1)"><i class="fas fa-chevron-right"></i></div>
     </div>
 
     <!-- PREVENTIVO -->
