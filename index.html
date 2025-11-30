@@ -35,7 +35,7 @@
             --font-title: 'Playfair Display', serif;
             --font-body: 'Lato', sans-serif;
             
-            --nav-mobile-height: 65px; /* Altezza barra app aumentata leggermente */
+            --nav-mobile-height: 65px; 
             --header-desktop-height: 80px;
         }
 
@@ -50,13 +50,10 @@
             background-color: var(--col-bg);
             color: var(--col-primary);
             line-height: 1.6;
-            /* Spazio extra in basso per il menu mobile */
             padding-bottom: var(--nav-mobile-height); 
-            /* Importante per evitare scroll orizzontale durante le animazioni */
             overflow-x: hidden; 
         }
 
-        /* Rimuove il padding bottom su desktop */
         @media (min-width: 1024px) {
             body { padding-bottom: 0; }
         }
@@ -66,296 +63,159 @@
         ul { list-style: none; padding: 0; margin: 0; }
         img { max-width: 100%; display: block; }
         
-        /* Stile per immagini rotte (per anteprima) */
         img[alt]:after {  
-            display: block;
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #f0f0f0;
-            content: attr(alt);
+            display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #f0f0f0; content: attr(alt);
             display: flex; align-items: center; justify-content: center;
             color: #888; font-weight: bold; border: 1px dashed #ccc;
         }
 
         .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
+            width: 90%; max-width: 1200px; margin: 0 auto;
         }
 
         /* --- ANIMAZIONI SCROLL REVEAL --- */
         .reveal {
-            opacity: 0;
-            transform: translateY(50px); /* Parte dal basso */
-            transition: all 0.8s ease-out; /* Durata e fluidità */
+            opacity: 0; transform: translateY(50px); transition: all 0.8s ease-out;
         }
-
         .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
+            opacity: 1; transform: translateY(0);
         }
 
         /* --- 2. HEADER (DESKTOP) --- */
         header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            position: sticky; top: 0; z-index: 1000;
             background-color: var(--col-white);
             box-shadow: 0 2px 15px rgba(0,0,0,0.05);
             height: var(--header-desktop-height);
-            display: flex;
-            align-items: center;
+            display: flex; align-items: center;
             transition: height 0.3s ease;
         }
-
         header.scrolled { height: 60px; }
 
         header .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 100%;
-            width: 100%;
+            display: flex; justify-content: space-between; align-items: center; height: 100%; width: 100%;
         }
 
         .logo {
-            height: 300px;
-            width: auto;
-            object-fit: contain;
-            /* Aggiunge un'ombra leggera per staccarlo dallo sfondo */
+            height: 300px; width: auto; object-fit: contain;
             filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.3));
         }
         
         .logo-text-fallback {
-            font-family: var(--font-title);
-            color: var(--col-accent);
-            font-size: 24px;
-            font-weight: bold;
-            margin: 0;
-            display: none; /* Mostrato via JS se img fallisce */
+            font-family: var(--font-title); color: var(--col-accent);
+            font-size: 24px; font-weight: bold; margin: 0; display: none;
         }
 
-        /* Menu Desktop */
-        .desktop-menu {
-            display: flex;
-            gap: 30px;
-        }
-
+        .desktop-menu { display: flex; gap: 30px; }
         .desktop-menu li a {
-            font-size: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-            color: var(--col-primary);
-            position: relative;
-            padding-bottom: 5px;
+            font-size: 15px; text-transform: uppercase; letter-spacing: 1px;
+            font-weight: 600; color: var(--col-primary); position: relative; padding-bottom: 5px;
         }
-
         .desktop-menu li a::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 0; width: 0; height: 2px;
-            background-color: var(--col-accent);
-            transition: 0.3s;
+            content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px;
+            background-color: var(--col-accent); transition: 0.3s;
         }
-
         .desktop-menu li a:hover::after { width: 100%; }
 
-        .header-contacts {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
+        .header-contacts { display: flex; align-items: center; gap: 15px; }
         .btn-contact-header {
-            background-color: var(--col-primary);
-            color: var(--col-white);
-            padding: 8px 18px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            background-color: var(--col-primary); color: var(--col-white);
+            padding: 8px 18px; border-radius: 30px; font-size: 14px; font-weight: 700;
+            display: flex; align-items: center; gap: 8px;
         }
         .btn-contact-header:hover { background-color: var(--col-accent); color: white; }
 
-        /* Nascondi elementi desktop su mobile */
         .mobile-hidden { display: none; }
-        
         @media (min-width: 1024px) {
             .mobile-visible { display: none; }
             .mobile-hidden { display: flex; }
         }
-
-        /* Nascondi menu desktop su mobile */
         @media (max-width: 1023px) {
             .desktop-menu, .header-contacts { display: none; }
             header { justify-content: center; }
             header .container { justify-content: center; }
         }
 
-        /* --- 3. MOBILE BOTTOM NAVIGATION (MIGLIORATA) --- */
+        /* --- 3. MOBILE BOTTOM NAVIGATION --- */
         .mobile-bottom-nav {
-            position: fixed;
-            bottom: 0; left: 0; width: 100%;
-            height: var(--nav-mobile-height);
-            background-color: var(--col-white);
-            /* Ombra più scura per staccare meglio dal contenuto */
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.1); 
-            z-index: 2000;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            /* Bordo più visibile */
-            border-top: 1px solid #e0e0e0; 
-            padding-bottom: env(safe-area-inset-bottom); /* Safe area per iPhone */
+            position: fixed; bottom: 0; left: 0; width: 100%; height: var(--nav-mobile-height);
+            background-color: var(--col-white); box-shadow: 0 -4px 15px rgba(0,0,0,0.1); 
+            z-index: 2000; display: flex; justify-content: space-around; align-items: center;
+            border-top: 1px solid #e0e0e0; padding-bottom: env(safe-area-inset-bottom);
         }
-
         @media (min-width: 1024px) { .mobile-bottom-nav { display: none; } }
 
         .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            /* Font size aumentato per leggibilità */
-            font-size: 11px; 
-            font-weight: 500;
-            /* Colore inattivo più scuro per contrasto */
-            color: #666; 
-            flex: 1;
-            height: 100%;
-            transition: color 0.2s, background-color 0.2s;
-            padding-top: 5px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 500; color: #666; flex: 1; height: 100%;
+            transition: color 0.2s, background-color 0.2s; padding-top: 5px;
         }
-
-        /* Icone più grandi */
-        .nav-item i {
-            font-size: 22px; 
-            margin-bottom: 4px;
-            transition: transform 0.2s;
-        }
-
-        .nav-item.active { 
-            color: var(--col-accent); 
-            font-weight: 700;
-        }
-        
-        .nav-item:hover {
-            color: var(--col-accent);
-            background-color: #f9f9f9; /* Leggero background on hover */
-        }
-        
+        .nav-item i { font-size: 20px; margin-bottom: 4px; transition: transform 0.2s; }
+        .nav-item.active { color: var(--col-accent); font-weight: 700; }
+        .nav-item:hover { color: var(--col-accent); background-color: #f9f9f9; }
         .nav-item.active i { transform: translateY(-3px); }
 
         /* --- 4. SEZIONI GENERALI --- */
-        section {
-            padding: 60px 0;
-            /* Compensazione scroll per header fisso */
-            scroll-margin-top: 100px; 
-        }
-
+        section { padding: 60px 0; scroll-margin-top: 100px; }
         section h2 {
-            font-size: 2.5rem;
-            text-align: center;
-            margin-bottom: 40px;
-            color: var(--col-primary);
-            position: relative;
-            padding-bottom: 15px;
+            font-size: 2.5rem; text-align: center; margin-bottom: 40px;
+            color: var(--col-primary); position: relative; padding-bottom: 15px;
         }
-
         section h2::after {
-            content: "";
-            position: absolute;
-            bottom: 0; left: 50%; transform: translateX(-50%);
-            width: 60px; height: 3px;
-            background-color: var(--col-accent);
+            content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 60px; height: 3px; background-color: var(--col-accent);
         }
 
-        /* Colori Sfondi Alternati */
         .services { background-color: var(--col-white); }
         .about { background-color: var(--col-bg); }
-        .photo { background-color: var(--col-white); }
-        .preventivo { background-color: var(--col-bg); }
+        .blog-section { background-color: var(--col-white); }
+        .photo { background-color: #F9F7F2; } 
+        .preventivo { background-color: var(--col-white); }
         .contact { background-color: var(--col-primary); color: white; }
         .contact h2 { color: white; }
         .contact h2::after { background-color: white; }
 
         /* --- 5. SLIDER SERVIZI --- */
         .slider-container {
-            position: relative;
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
-            overflow: hidden;
-            border-radius: 12px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
-            background: #eee; /* Fallback se immagine non carica */
+            position: relative; width: 100%; max-width: 900px; margin: 0 auto;
+            overflow: hidden; border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1); background: #eee;
         }
-
         .slider { display: flex; }
         .slide { min-width: 100%; position: relative; }
-        
-        .slide img {
-            width: 100%;
-            height: 500px;
-            object-fit: cover;
-        }
-        /* Mobile slider height */
+        .slide img { width: 100%; height: 500px; object-fit: cover; }
         @media (max-width: 768px) { .slide img { height: 300px; } }
 
         .slide-overlay {
-            position: absolute;
-            bottom: 0; left: 0; width: 100%;
+            position: absolute; bottom: 0; left: 0; width: 100%;
             background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-            color: white;
-            padding: 30px;
-            padding-top: 80px;
-            text-align: center;
+            color: white; padding: 30px; padding-top: 80px; text-align: center;
         }
-
         .open-modal {
-            background: var(--col-accent);
-            color: white;
-            border: none;
-            padding: 10px 25px;
-            border-radius: 50px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: transform 0.2s;
+            background: var(--col-accent); color: white; border: none; padding: 10px 25px;
+            border-radius: 50px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: transform 0.2s;
         }
         .open-modal:hover { transform: scale(1.05); background: var(--col-accent-hover); }
 
-        /* Frecce Slider (Style Base) */
         .nav-btn {
             position: absolute; top: 50%; transform: translateY(-50%);
             background: rgba(255,255,255,0.2); backdrop-filter: blur(5px);
-            border: 1px solid rgba(255,255,255,0.5);
-            color: white; width: 45px; height: 45px;
+            border: 1px solid rgba(255,255,255,0.5); color: white; width: 45px; height: 45px;
             border-radius: 50%; cursor: pointer; z-index: 10;
-            display: flex; align-items: center; justify-content: center;
-            transition: 0.3s;
+            display: flex; align-items: center; justify-content: center; transition: 0.3s;
         }
         .nav-btn:hover { background: var(--col-accent); border-color: var(--col-accent); }
         #prevSlide { left: 15px; }
         #nextSlide { right: 15px; }
 
-        /* Dots Slider */
         .dots-container { display: flex; justify-content: center; gap: 10px; margin-top: 20px; }
-        .dot {
-            width: 10px; height: 10px; background: #ccc; border-radius: 50%;
-            cursor: pointer; transition: 0.3s;
-        }
+        .dot { width: 10px; height: 10px; background: #ccc; border-radius: 50%; cursor: pointer; transition: 0.3s; }
         .dot.active { background: var(--col-accent); transform: scale(1.3); }
-
-        .progress-bar-container {
-            height: 3px; background: #e0e0e0; width: 200px; margin: 10px auto; border-radius: 2px; overflow: hidden;
-        }
+        .progress-bar-container { height: 3px; background: #e0e0e0; width: 200px; margin: 10px auto; border-radius: 2px; overflow: hidden; }
         .progress-bar { height: 100%; background: var(--col-accent); width: 0; }
 
-        /* --- 6. MODALI TESTO (Servizi) --- */
+        /* --- 6. MODALI (Generico) --- */
         .modal-info {
             display: none; position: fixed; z-index: 3000;
             left: 0; top: 0; width: 100%; height: 100%;
@@ -364,223 +224,180 @@
         }
         .modal-info-content {
             background: white; padding: 40px; border-radius: 8px;
-            max-width: 500px; width: 100%; position: relative;
-            text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            max-width: 600px; width: 100%; position: relative;
+            text-align: left; box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            max-height: 90vh; overflow-y: auto; /* Scroll se testo lungo */
         }
         .close-modal-info {
             position: absolute; top: 15px; right: 20px;
             font-size: 28px; cursor: pointer; color: #888;
         }
-        .modal-info-content h3 { color: var(--col-accent); margin-bottom: 15px; }
+        .modal-info-content h3 { color: var(--col-accent); margin-bottom: 15px; font-size: 24px;}
+        .modal-info-content p { color: #555; margin-bottom: 15px; }
 
-        /* --- 7. GALLERIA & LIGHTBOX (Zoom Elegante & Filtro Migliorato) --- */
-        
-        /* NUOVO STILE FILTRO (PULSANTI A PILLOLA) */
-        #filterContainer {
+        /* --- 7. BLOG / MAGAZINE STYLES --- */
+        .blog-grid {
+            display: grid; /* Sarà nascosto di default via inline-style o JS */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            /* Animazione quando appare */
+            animation: fadeInGrid 0.5s ease-out;
+        }
+
+        .blog-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 40px;
-            flex-wrap: wrap; /* Per mobile */
+            flex-direction: column;
         }
 
-        .filter-btn {
-            padding: 10px 25px;
-            border: 1px solid #ccc; /* Leggero bordo */
-            border-radius: 30px;
-            background: transparent;
-            /* MODIFICA: Colore più scuro per leggibilità */
-            color: var(--col-primary); /* Era #666 */
-            font-family: var(--font-body);
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .blog-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .blog-img-container {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .blog-img-container img {
+            width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease;
+        }
+        .blog-card:hover .blog-img-container img { transform: scale(1.1); }
+
+        .blog-content { padding: 25px; display: flex; flex-direction: column; flex-grow: 1; }
+        .blog-date { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 10px; }
+        .blog-title { font-family: var(--font-title); font-size: 20px; color: var(--col-primary); margin-bottom: 15px; line-height: 1.3; }
+        .blog-excerpt { font-size: 15px; color: #666; margin-bottom: 20px; flex-grow: 1; }
+        
+        .blog-btn-link {
+            color: var(--col-accent); font-weight: 700; text-transform: uppercase;
+            font-size: 13px; letter-spacing: 1px; border: none; background: none;
+            cursor: pointer; padding: 0; text-align: left; align-self: flex-start;
+        }
+        .blog-btn-link:hover { color: var(--col-primary); text-decoration: underline; }
+        
+        .blog-text-full p { margin-bottom: 1em; line-height: 1.8; }
+        .blog-text-full strong { color: var(--col-primary); }
+
+        /* Bottone Show/Hide Blog */
+        #toggleBlogBtn {
+            background-color: transparent;
+            color: var(--col-primary);
+            border: 2px solid var(--col-primary);
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 700;
             text-transform: uppercase;
+            font-size: 14px;
             letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
         }
-
-        /* MODIFICA: Hover solo su dispositivi con mouse per evitare sticky hover su mobile */
-        @media (hover: hover) {
-            .filter-btn:hover {
-                border-color: var(--col-accent);
-                color: var(--col-accent);
-            }
-        }
-
-        .filter-btn.active {
-            background-color: var(--col-accent);
-            border-color: var(--col-accent);
+        #toggleBlogBtn:hover {
+            background-color: var(--col-primary);
             color: white;
-            box-shadow: 0 5px 15px rgba(196, 154, 108, 0.3);
+        }
+
+
+        /* --- 8. GALLERIA & FILTRI --- */
+        #filterContainer {
+            display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 10px 25px; border: 1px solid #ccc; border-radius: 30px;
+            background: transparent; color: var(--col-primary);
+            font-family: var(--font-body); font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;
+        }
+        @media (hover: hover) {
+            .filter-btn:hover { border-color: var(--col-accent); color: var(--col-accent); }
+        }
+        .filter-btn.active {
+            background-color: var(--col-accent); border-color: var(--col-accent);
+            color: white; box-shadow: 0 5px 15px rgba(196, 154, 108, 0.3);
         }
 
         .photo-gallery {
-            /* Ripristinato Layout Grid */
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;
         }
 
-        /* GESTIONE FOTO SU MOBILE (NASCOSTE INIZIALMENTE) */
+        /* GESTIONE FOTO SU MOBILE */
         @media (max-width: 1024px) {
-            /* Nasconde le foto se la galleria è in stato di attesa */
-            .photo-gallery.awaiting-mobile-interaction .custom-image {
-                display: none !important;
-            }
-            
-            /* Mostra il messaggio di invito */
+            .photo-gallery.awaiting-mobile-interaction .custom-image { display: none !important; }
             .photo-gallery.awaiting-mobile-interaction::before {
-                /* MODIFICA TESTO */
                 content: "👆 Tocca un filtro per aprire le foto.\A Tocca di nuovo per chiudere.";
-                white-space: pre-wrap; /* Permette l'a capo */
-                display: block;
-                grid-column: 1 / -1; /* Occupa tutta la larghezza della griglia */
-                text-align: center;
-                width: 100%;
-                /* RIDOTTO SPAZIO DEL MESSAGGIO */
-                padding: 15px 10px; 
-                color: #888;
-                font-size: 14px; 
-                font-style: italic;
-                background-color: #f5f5f5;
-                border-radius: 8px;
-                border: 1px dashed #ccc;
-                line-height: 1.6;
+                white-space: pre-wrap; display: block; grid-column: 1 / -1; text-align: center;
+                width: 100%; padding: 15px 10px; color: #888; font-size: 14px; font-style: italic;
+                background-color: #f5f5f5; border-radius: 8px; border: 1px dashed #ccc; line-height: 1.6;
             }
         }
 
         .custom-image {
-            width: 100%; 
-            height: 280px; /* Altezza fissa per ordine */
-            object-fit: cover;
-            border-radius: 8px; 
-            cursor: pointer;
-            
-            /* Nuovo effetto Slow Zoom mantenuto (senza masonry) */
+            width: 100%; height: 280px; object-fit: cover; border-radius: 8px; cursor: pointer;
             transition: transform 0.6s ease, filter 0.3s ease, opacity 0.4s ease;
-            background: #e5e5e5; 
-            position: relative;
-            /* Animazione FadeIn quando filtrate */
-            animation: fadeInGrid 0.5s ease-out;
+            background: #e5e5e5; position: relative; animation: fadeInGrid 0.5s ease-out;
         }
-        
-        @keyframes fadeInGrid {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeInGrid { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .custom-image:hover { transform: scale(1.03); filter: brightness(1.1); box-shadow: 0 15px 30px rgba(0,0,0,0.2); z-index: 10; }
 
-        /* Hover Effect: Slow Zoom e Leggera Luminosità */
-        .custom-image:hover { 
-            transform: scale(1.03); 
-            filter: brightness(1.1);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-            z-index: 10;
-        }
-
-        /* --- LIGHTBOX STILE MUSEO --- */
-        
-        /* Animazioni di entrata */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes zoomIn {
-            from { transform: scale(0.95); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
+        /* --- 9. LIGHTBOX --- */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes zoomIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .lightbox {
             display: none; position: fixed; z-index: 4000;
             left: 0; top: 0; width: 100%; height: 100%;
-            /* Sfondo scuro semitrasparente */
-            background: rgba(0, 0, 0, 0.92); 
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.92); backdrop-filter: blur(8px);
             align-items: center; justify-content: center;
         }
-        
-        /* Applicazione animazione al container */
-        .lightbox.active { 
-            display: flex; 
-            animation: fadeIn 0.4s ease-out;
-        }
-
+        .lightbox.active { display: flex; animation: fadeIn 0.4s ease-out; }
         .lightbox-img {
-            max-width: 90%; max-height: 85vh;
-            /* Rimosso bordo bianco spesso, aggiunto bordo sottile o nullo */
-            border: 1px solid rgba(255,255,255,0.1); 
-            border-radius: 4px;
-            /* Ombra profonda per effetto sospeso */
-            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
-            object-fit: contain;
-            background: #111; /* Fallback scuro */
-            
-            /* Animazione zoom dell'immagine */
-            animation: zoomIn 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            max-width: 90%; max-height: 85vh; border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 4px; box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+            object-fit: contain; background: #111; animation: zoomIn 0.5s cubic-bezier(0.19, 1, 0.22, 1);
         }
-
-        /* Controlli Minimalisti Fluttuanti */
         .lightbox-close {
-            position: absolute; top: 30px; right: 40px;
-            color: rgba(255,255,255,0.6); 
-            font-size: 50px; 
-            font-weight: 300;
-            cursor: pointer; 
-            transition: all 0.3s; 
-            z-index: 4001;
-            line-height: 1;
+            position: absolute; top: 30px; right: 40px; color: rgba(255,255,255,0.6);
+            font-size: 50px; font-weight: 300; cursor: pointer; transition: all 0.3s; z-index: 4001; line-height: 1;
         }
-        .lightbox-close:hover { 
-            color: var(--col-accent); 
-            transform: rotate(90deg); /* Piacevole rotazione al passaggio */
-        }
-
-        /* Frecce Lightbox Stile "I Nostri Servizi" */
+        .lightbox-close:hover { color: var(--col-accent); transform: rotate(90deg); }
         .lightbox-prev, .lightbox-next {
             position: absolute; top: 50%; transform: translateY(-50%);
-            /* Copiato stile da .nav-btn ma adattato alle dimensioni fullscreen */
-            background: rgba(255,255,255,0.2); 
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255,255,255,0.5);
-            color: white; 
-            width: 50px; height: 50px; /* Leggermente più grandi */
-            border-radius: 50%; 
-            cursor: pointer; 
-            z-index: 4001;
-            display: flex; align-items: center; justify-content: center;
-            transition: 0.3s;
-            font-size: 20px; /* Dimensione icona */
+            background: rgba(255,255,255,0.2); backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.5); color: white;
+            width: 50px; height: 50px; border-radius: 50%; cursor: pointer; z-index: 4001;
+            display: flex; align-items: center; justify-content: center; transition: 0.3s; font-size: 20px;
         }
-        
-        .lightbox-prev:hover, .lightbox-next:hover { 
-            background: var(--col-accent); 
-            border-color: var(--col-accent);
-            transform: translateY(-50%) scale(1.1); /* Leggero ingrandimento */
+        .lightbox-prev:hover, .lightbox-next:hover {
+            background: var(--col-accent); border-color: var(--col-accent); transform: translateY(-50%) scale(1.1);
         }
-        
         .lightbox-prev { left: 30px; }
         .lightbox-next { right: 30px; }
 
-        /* --- 8. PREVENTIVO --- */
+        /* --- 10. PREVENTIVO --- */
         .simulator-container {
             background: white; padding: 40px; border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-top: 30px;
         }
-        
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: #666; }
-        
         input, select, textarea {
             width: 100%; padding: 14px; border: 1px solid #ddd;
-            border-radius: 6px; font-size: 16px; font-family: var(--font-body);
-            transition: border-color 0.3s;
+            border-radius: 6px; font-size: 16px; font-family: var(--font-body); transition: border-color 0.3s;
         }
         input:focus, select:focus, textarea:focus { border-color: var(--col-accent); }
-
         .form-columns { display: flex; flex-wrap: wrap; gap: 40px; }
         .form-column { flex: 1; min-width: 300px; }
-
         button {
             background: var(--col-primary); color: white;
             border: none; padding: 15px 40px; border-radius: 50px;
@@ -588,25 +405,22 @@
             transition: 0.3s; display: inline-block;
         }
         button:hover { background: var(--col-accent); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(196, 154, 108, 0.4); }
-
         .result-container {
             margin-top: 30px; padding: 30px; background: #FDFBF7;
             border: 1px solid var(--col-accent); border-radius: 8px; display: none;
         }
         .total-price { font-family: var(--font-title); font-size: 2rem; color: var(--col-accent); font-weight: 700; }
 
-        /* --- 9. CONTATTI & FOOTER --- */
+        /* --- 11. CONTATTI & FOOTER --- */
         .contact-list li { margin-bottom: 15px; font-size: 18px; display: flex; align-items: center; gap: 10px; }
         .contact-social { margin-top: 30px; font-size: 30px; display: flex; gap: 20px; }
         .contact-social a:hover { color: var(--col-accent); }
-
         footer {
             background-color: #1a1a1a; color: #777; text-align: center; padding: 30px 0; font-size: 14px;
         }
-        /* Padding extra nel footer per non coprire il copyright con la navbar mobile */
         @media(max-width: 1023px) { footer { padding-bottom: 90px; } }
 
-        /* --- 10. ELEMENTI FLOTTANTI --- */
+        /* --- 12. ELEMENTI FLOTTANTI --- */
         .whatsapp-float {
             position: fixed; bottom: 90px; right: 20px;
             width: 60px; height: 60px; background: #25D366;
@@ -624,7 +438,6 @@
             z-index: 5000; display: none;
         }
         @media(min-width: 1024px) { .cookie-banner { bottom: 30px; left: 30px; transform: none; } }
-        
         .cookie-btn { padding: 8px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin: 5px; }
         .cookie-accept { background: var(--col-accent); color: white; }
         .cookie-decline { background: #555; color: white; }
@@ -655,6 +468,7 @@
                 <ul class="desktop-menu">
                     <li><a href="#servizi">Servizi</a></li>
                     <li><a href="#chi-siamo">Chi Siamo</a></li>
+                    <li><a href="#blog">Blog</a></li> <!-- Nuova Voce -->
                     <li><a href="#foto-lavori">Lavori</a></li>
                     <li><a href="#preventivo">Preventivo</a></li>
                     <li><a href="#contatti">Contatti</a></li>
@@ -676,6 +490,10 @@
             <i class="fas fa-tools"></i>
             <span>Servizi</span>
         </a>
+        <a href="#blog" class="nav-item">
+            <i class="fas fa-newspaper"></i>
+            <span>Blog</span>
+        </a>
         <a href="#foto-lavori" class="nav-item">
             <i class="fas fa-images"></i>
             <span>Foto</span>
@@ -694,12 +512,10 @@
     <section id="servizi" class="services">
         <div class="container">
             <h2 class="reveal">I Nostri Servizi</h2>
-            <!-- Preload aggiunto per velocità -->
             <div class="slider-container reveal">
                 <div class="slider">
                     <!-- Slides -->
                     <div class="slide">
-                        <!-- ADDED FETCHPRIORITY -->
                         <img src="img/corridoio_spina_di_pesce.jpeg" alt="Pavimento Spina" fetchpriority="high">
                         <div class="slide-overlay">
                             <h3>Pavimento a spina di pesce</h3>
@@ -721,7 +537,7 @@
                         </div>
                     </div>
                     <div class="slide">
-                        <img src="img/" alt="SPC">
+                        <img src="img/spc_pavimento.jpeg" alt="SPC">
                         <div class="slide-overlay">
                             <h3>SPC</h3>
                             <button class="open-modal" data-modal="modal4">Dettagli</button>
@@ -825,6 +641,151 @@
         </div>
     </section>
 
+    <!-- NUOVA SEZIONE BLOG / MAGAZINE (CON TOGGLE) -->
+    <section id="blog" class="blog-section">
+        <div class="container">
+            <h2 class="reveal">Magazine & Consigli</h2>
+            
+            <!-- Pulsante per Mostrare/Nascondere il Blog -->
+            <div class="reveal" style="text-align: center; margin-bottom: 40px;">
+                <button id="toggleBlogBtn">
+                    Apri Magazine <i class="fas fa-chevron-down" style="margin-left: 8px;"></i>
+                </button>
+            </div>
+
+            <!-- Griglia Nascosta di Default -->
+            <div class="blog-grid" id="blogGrid" style="display: none;">
+                
+                <!-- Articolo 1: Protezione -->
+                <article class="blog-card">
+                    <div class="blog-img-container">
+                        <img src="img/interno.jpeg" alt="Pulizia Parquet">
+                    </div>
+                    <div class="blog-content">
+                        <span class="blog-date">Manutenzione</span>
+                        <h3 class="blog-title">Scudo Naturale: Come proteggere il tuo parquet</h3>
+                        <p class="blog-excerpt">Pochi semplici gesti quotidiani per mantenere intatta la bellezza del legno contro i suoi peggiori nemici.</p>
+                        <button class="blog-btn-link open-modal" data-modal="modal-blog-1">Leggi l'articolo <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </article>
+
+                <!-- Articolo 2: Restauro -->
+                <article class="blog-card">
+                    <div class="blog-img-container">
+                        <img src="img/restauro2.jpeg" alt="Fasi Restauro">
+                    </div>
+                    <div class="blog-content">
+                        <span class="blog-date">Restauro</span>
+                        <h3 class="blog-title">L'Arte della Rinascita: Come avviene un restauro</h3>
+                        <p class="blog-excerpt">Dalla levigatura alla finitura: il processo tecnico che trasforma un pavimento usurato in un'opera d'arte.</p>
+                        <button class="blog-btn-link open-modal" data-modal="modal-blog-2">Leggi l'articolo <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </article>
+
+                <!-- Articolo 3: Finiture -->
+                <article class="blog-card">
+                    <div class="blog-img-container">
+                        <img src="img/spinadipesce1.jpeg" alt="Finitura Olio vs Vernice">
+                    </div>
+                    <div class="blog-content">
+                        <span class="blog-date">Guida alla Scelta</span>
+                        <h3 class="blog-title">Il Dilemma della Finitura: Olio o Vernice?</h3>
+                        <p class="blog-excerpt">Estetica naturale o massima protezione? Una guida completa per scegliere la soluzione adatta al tuo stile di vita.</p>
+                        <button class="blog-btn-link open-modal" data-modal="modal-blog-3">Leggi l'articolo <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </article>
+
+                <!-- Articolo 4: Bagno (Nuovo) -->
+                <article class="blog-card">
+                    <div class="blog-img-container">
+                        <img src="img/bagno.jpeg" alt="Parquet in Bagno">
+                    </div>
+                    <div class="blog-content">
+                        <span class="blog-date">Design & Tecnica</span>
+                        <h3 class="blog-title">Legno in Bagno? Sfatare i Miti</h3>
+                        <p class="blog-excerpt">Non rinunciare all'eleganza. Scopri come il parquet può trasformare il tuo bagno in una spa privata, senza rischi.</p>
+                        <button class="blog-btn-link open-modal" data-modal="modal-blog-4">Leggi l'articolo <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- MODALI BLOG (Contenuto Completo) -->
+    <!-- Modale Articolo 1 -->
+    <div id="modal-blog-1" class="modal-info">
+        <div class="modal-info-content">
+            <span class="close-modal-info">&times;</span>
+            <h3>Come proteggere il parquet</h3>
+            <div class="blog-text-full">
+                <p>Il parquet è un materiale vivo, capace di durare generazioni se trattato con il giusto rispetto. Spesso si teme che sia troppo delicato, ma la verità è che bastano poche attenzioni per mantenerlo splendido.</p>
+                <p><strong>1. I Nemici invisibili: Acqua e Sabbia</strong><br>
+                L'acqua stagnante è il nemico numero uno: penetra nelle fibre causando rigonfiamenti. Quando lavi il pavimento, usa sempre uno straccio solo <em>umido</em>, mai bagnato, e ben strizzato. La sabbia e i sassolini, invece, agiscono come carta vetrata sotto le scarpe. Posiziona sempre uno zerbino di qualità all'ingresso.</p>
+                <p><strong>2. Il Detergente Giusto</strong><br>
+                Evita candeggina, alcol o detergenti aggressivi da supermercato che "sgrassano" troppo, togliendo nutrimento al legno. Usa solo detergenti neutri specifici per parquet, che puliscono delicatamente rispettando la finitura.</p>
+                <p><strong>3. Feltri e Clima</strong><br>
+                Applica feltrini sotto tutte le sedie e i mobili pesanti per evitare graffi da trascinamento. Inoltre, tieni d'occhio l'umidità di casa: il legno sta bene dove stiamo bene noi, idealmente tra il 45% e il 60% di umidità relativa.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale Articolo 2 -->
+    <div id="modal-blog-2" class="modal-info">
+        <div class="modal-info-content">
+            <span class="close-modal-info">&times;</span>
+            <h3>Come avviene un restauro</h3>
+            <div class="blog-text-full">
+                <p>Vedere un vecchio pavimento tornare nuovo è sempre un'emozione. Ma cosa succede esattamente durante i nostri interventi? Il processo è meticoloso e richiede macchinari professionali.</p>
+                <p><strong>Fase 1: La Sgrossatura</strong><br>
+                Utilizziamo macchine levigatrici a nastro per rimuovere completamente la vecchia vernice e lo strato superficiale di legno danneggiato. Grazie ai nostri sistemi di aspirazione moderni, questa fase è ormai quasi del tutto priva di polvere nell'aria.</p>
+                <p><strong>Fase 2: La Stuccatura</strong><br>
+                Raccogliamo la polvere finissima del legno stesso creata durante la levigatura e la mescoliamo con una resina legante. Questo impasto viene spatolato su tutta la superficie per chiudere fessure e pori, garantendo un colore identico al resto del pavimento.</p>
+                <p><strong>Fase 3: Carteggiatura Fine e Finitura</strong><br>
+                Passiamo carte abrasive sempre più fini per rendere la superficie liscia come la seta. Infine, applichiamo la finitura scelta (olio o vernice) in più mani, proteggendo il lavoro e donando al legno la sua nuova veste.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale Articolo 3 -->
+    <div id="modal-blog-3" class="modal-info">
+        <div class="modal-info-content">
+            <span class="close-modal-info">&times;</span>
+            <h3>Per quale finitura optare</h3>
+            <div class="blog-text-full">
+                <p>Questa è la domanda che ci viene posta più spesso. Non esiste una risposta assoluta, ma esiste la scelta giusta per il <em>tuo</em> stile di vita.</p>
+                <p><strong>La Vernice: Praticità e Resistenza</strong><br>
+                Le vernici moderne (spesso all'acqua, quindi ecologiche) creano un film protettivo sopra il legno. <br>
+                <em>Vantaggi:</em> Altissima resistenza ai graffi e ai liquidi, richiede pochissima manutenzione.<br>
+                <em>Svantaggi:</em> L'aspetto è leggermente meno "materico" e, se si graffia profondamente, è difficile fare un ritocco locale (spesso serve rilevigare tutto).</p>
+                <p><strong>L'Olio: Naturalezza e Calore</strong><br>
+                L'olio impregna le fibre del legno senza creare pellicole superficiali. Al tatto senti il vero legno.<br>
+                <em>Vantaggi:</em> Estetica impareggiabile, i piccoli graffi si mascherano facilmente e si può ripristinare una zona rovinata senza dover rifare tutta la stanza.<br>
+                <em>Svantaggi:</em> Richiede più cura. Va nutrito periodicamente con prodotti specifici per non farlo seccare.</p>
+                <p><strong>Il Consiglio di LuxuryWood</strong><br>
+                Se hai animali domestici o bambini piccoli che rovesciano spesso liquidi, la vernice offre più tranquillità. Se cerchi l'eleganza assoluta e sei disposto a dedicare qualche attenzione in più alla casa, l'olio è insuperabile.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale Articolo 4 (Nuovo) -->
+    <div id="modal-blog-4" class="modal-info">
+        <div class="modal-info-content">
+            <span class="close-modal-info">&times;</span>
+            <h3>Legno in Bagno: I Miti da Sfatare</h3>
+            <div class="blog-text-full">
+                <p>Molti clienti sognano un bagno caldo ed accogliente, ma rinunciano al parquet per paura dell'umidità. È un errore: il legno può vivere felicemente in bagno, se si rispettano alcune regole d'oro.</p>
+                <p><strong>La scelta dell'Essenza</strong><br>
+                Non tutti i legni sono uguali. Per il bagno consigliamo essenze stabili che non temono l'umidità, come il <strong>Teak</strong>, l'Iroko o il Doussié. Anche il Rovere, se trattato correttamente, è un'ottima scelta.</p>
+                <p><strong>Umidità vs Acqua Stagnante</strong><br>
+                Il legno respira e si adatta all'umidità dell'aria (anzi, la regola!). Il vero pericolo è l'acqua che rimane a terra per ore. Basta avere l'accortezza di asciugare le pozzanghere dopo la doccia e arieggiare la stanza per far uscire il vapore eccessivo.</p>
+                <p><strong>La Finitura Consigliata</strong><br>
+                In bagno, suggeriamo quasi sempre una finitura a <strong>vernice</strong>. Sigilla i pori del legno impedendo all'acqua di penetrare in profondità, rendendo il pavimento molto più facile da gestire rispetto a un pavimento oliato.</p>
+                <p>Il risultato? Un comfort termico unico (niente più piedi gelati al mattino) e un'estetica da spa di lusso.</p>
+            </div>
+        </div>
+    </div>
+
     <!-- FOTO LAVORI (Con Lightbox Desktop/Mobile) -->
     <section id="foto-lavori" class="photo">
         <div class="container">
@@ -846,7 +807,6 @@
                 <img src="img/corridoio_spina_di_pesce.jpeg" alt="Corridoio a spina" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(2)">
                 <img src="img/ufficio.jpeg" alt="Ufficio Direzionale" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(3)">
                 <img src="img/parete_camera.jpeg" alt="Parete Boiserie" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(4)">
-                <!--<img src="img/interno2.jpeg" alt="Salone Classico" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(4)">-->
                 <img src="img/bagno.jpeg" alt="Bagno in Legno" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(5)">
                 <img src="img/restauro2.jpeg" alt="Restauro Villa" data-category="restauri tutte" class="custom-image reveal" onclick="openLightbox(6)">
                 <img src="img/restauro.jpeg" alt="Dettaglio Restauro" data-category="restauri tutte" class="custom-image reveal" onclick="openLightbox(7)">
@@ -968,7 +928,6 @@
                     <ul class="contact-list">
                         <li><i class="fas fa-envelope"></i> luxurywoodpavimenti@gmail.com</li>
                         <li><i class="fas fa-envelope"></i> luxurywood@upapec.it</li>
-                        <!--<li><i class="fas fa-map-marker-alt"></i>/li>-->
                     </ul>
                 </div>
                 <div>
@@ -1143,8 +1102,9 @@
         startTimer();
 
 
-        // --- 5. MODALI SERVIZI & PAUSA CAROSELLO ---
+        // --- 5. MODALI SERVIZI & BLOG & PAUSA CAROSELLO ---
         const modalInfoList = document.querySelectorAll(".modal-info");
+        // Seleziona anche i nuovi bottoni del blog (che hanno la stessa classe open-modal)
         document.querySelectorAll(".open-modal").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 const id = e.target.dataset.modal;
@@ -1171,6 +1131,25 @@
                 startTimer();
             }
         }
+
+        // --- 5B. NUOVA LOGICA: TOGGLE BLOG ---
+        const toggleBlogBtn = document.getElementById("toggleBlogBtn");
+        const blogGrid = document.getElementById("blogGrid");
+
+        toggleBlogBtn.addEventListener("click", () => {
+            if (blogGrid.style.display === "none") {
+                // APRI
+                blogGrid.style.display = "grid";
+                toggleBlogBtn.innerHTML = 'Chiudi Magazine <i class="fas fa-chevron-up" style="margin-left: 8px;"></i>';
+            } else {
+                // CHIUDI
+                blogGrid.style.display = "none";
+                toggleBlogBtn.innerHTML = 'Apri Magazine <i class="fas fa-chevron-down" style="margin-left: 8px;"></i>';
+                // Opzionale: scrolla leggermente in su per non perdere il focus
+                document.getElementById("blog").scrollIntoView({behavior: "smooth", block: "start"});
+            }
+        });
+
 
         // --- 6. FILTRO GALLERIA (Pulsanti + Logica Mobile) ---
         const filterBtns = document.querySelectorAll(".filter-btn");
@@ -1420,6 +1399,46 @@
         // Seleziona tutti gli elementi con classe 'reveal'
         document.querySelectorAll('.reveal').forEach(el => {
             observer.observe(el);
+        });
+
+        // --- 11. FIX MOBILE NAVIGATION (Buggata/Ricaricamento) ---
+        // Intercettiamo i click sul menu in basso per evitare reload e gestire lo scroll fluido
+        document.querySelectorAll('.mobile-bottom-nav a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault(); // BLOCCA il ricaricamento della pagina
+
+                const targetId = this.getAttribute('href');
+
+                // Caso 1: Tasto Home (href="#") -> Torna in cima
+                if (targetId === '#') {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                } 
+                // Caso 2: Altri link (href="#id")
+                else {
+                    const targetSection = document.querySelector(targetId);
+                    if (targetSection) {
+                        // LOGICA SMART PER IL BLOG: 
+                        // Se clicco "Blog" dal menu e la sezione è chiusa, la apro automaticamente!
+                        if (targetId === '#blog') {
+                            const blogGrid = document.getElementById("blogGrid");
+                            const toggleBtn = document.getElementById("toggleBlogBtn");
+                            // Se è nascosto (display: none), simulo il click sul tasto "Apri Magazine"
+                            if (blogGrid.style.display === "none") {
+                                toggleBtn.click();
+                            }
+                        }
+
+                        // Scrollo alla sezione
+                        targetSection.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }
+            });
         });
 
     </script>
