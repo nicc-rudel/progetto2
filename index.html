@@ -169,12 +169,14 @@
             width: 60px; height: 3px; background-color: var(--col-accent);
         }
 
+        /* ALTERNANZA SFONDI MIGLIORATA */
         .services { background-color: var(--col-white); }
         .about { background-color: var(--col-bg); }
-        .blog-section { background-color: var(--col-white); }
-        .photo { background-color: #F9F7F2; } 
-        .preventivo { background-color: var(--col-white); }
+        .photo { background-color: var(--col-white); } /* Bianca */
+        .blog-section { background-color: var(--col-bg); } /* Crema */
+        .preventivo { background-color: var(--col-white); } /* Bianca */
         .contact { background-color: var(--col-primary); color: white; }
+        
         .contact h2 { color: white; }
         .contact h2::after { background-color: white; }
 
@@ -433,6 +435,22 @@
         .whatsapp-float:hover { transform: scale(1.1); }
         @media(min-width: 1024px) { .whatsapp-float { bottom: 30px; } }
 
+        /* --- BACK TO TOP BUTTON --- */
+        .back-to-top {
+            position: fixed; bottom: 160px; right: 20px; /* Mobile position above WhatsApp (90+60+10) */
+            width: 50px; height: 50px; background: var(--col-primary);
+            color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 1499;
+            opacity: 0; pointer-events: none; transition: 0.3s;
+            font-size: 20px; text-decoration: none;
+        }
+        .back-to-top.show { opacity: 1; pointer-events: all; }
+        .back-to-top:hover { background: var(--col-accent); transform: translateY(-3px); }
+
+        @media (min-width: 1024px) {
+            .back-to-top { bottom: 100px; /* Desktop position above WhatsApp (30+60+10) */ }
+        }
+
         .cookie-banner {
             position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
             width: 90%; max-width: 400px; background: rgba(30,30,30,0.95);
@@ -470,8 +488,8 @@
                 <ul class="desktop-menu">
                     <li><a href="#servizi">Servizi</a></li>
                     <li><a href="#chi-siamo">Chi Siamo</a></li>
-                    <li><a href="#blog">Blog</a></li> <!-- Nuova Voce -->
                     <li><a href="#foto-lavori">Lavori</a></li>
+                    <li><a href="#blog">Blog</a></li> <!-- Spostato dopo Lavori -->
                     <li><a href="#preventivo">Preventivo</a></li>
                     <li><a href="#contatti">Contatti</a></li>
                 </ul>
@@ -484,21 +502,18 @@
 
     <!-- MENU MOBILE BOTTOM (App Style) -->
     <nav class="mobile-bottom-nav">
-        <a href="#" class="nav-item active">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-        </a>
+        <!-- RIMOSSO IL TASTO HOME -->
         <a href="#servizi" class="nav-item">
             <i class="fas fa-tools"></i>
             <span>Servizi</span>
         </a>
-        <a href="#blog" class="nav-item">
-            <i class="fas fa-newspaper"></i>
-            <span>Blog</span>
-        </a>
         <a href="#foto-lavori" class="nav-item">
             <i class="fas fa-images"></i>
             <span>Foto</span>
+        </a>
+        <a href="#blog" class="nav-item"> <!-- Spostato dopo Foto -->
+            <i class="fas fa-newspaper"></i>
+            <span>Blog</span>
         </a>
         <a href="#preventivo" class="nav-item">
             <i class="fas fa-calculator"></i>
@@ -643,7 +658,35 @@
         </div>
     </section>
 
-    <!-- NUOVA SEZIONE BLOG / MAGAZINE (CON TOGGLE) -->
+    <!-- FOTO LAVORI (Con Lightbox Desktop/Mobile) -->
+    <section id="foto-lavori" class="photo">
+        <div class="container">
+            <h2 class="reveal">Galleria Realizzazioni</h2>
+            
+            <!-- NUOVO FILTRO A PULSANTI -->
+            <div id="filterContainer" class="reveal">
+                <!-- Nota: Ho aggiunto active di default nel codice ma lo rimuoverò via JS su mobile -->
+                <button class="filter-btn active" data-filter="tutte">Tutti</button>
+                <button class="filter-btn" data-filter="interni">Interni & Design</button>
+                <button class="filter-btn" data-filter="restauri">Restauri</button>
+            </div>
+
+            <!-- Aggiunta classe per logica mobile -->
+            <div class="photo-gallery awaiting-mobile-interaction">
+                <!-- Cliccando si apre il Lightbox. Ho aggiunto la classe reveal ad ogni immagine -->
+                <img src="img/interno.jpeg" alt="Living Moderno" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(0)">
+                <img src="img/spinadipesce1.jpeg" alt="Dettaglio Spina" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(1)">
+                <img src="img/corridoio_spina_di_pesce.jpeg" alt="Corridoio a spina" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(2)">
+                <img src="img/ufficio.jpeg" alt="Ufficio Direzionale" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(3)">
+                <img src="img/parete_camera.jpeg" alt="Parete Boiserie" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(4)">
+                <img src="img/bagno.jpeg" alt="Bagno in Legno" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(5)">
+                <img src="img/restauro2.jpeg" alt="Restauro Villa" data-category="restauri tutte" class="custom-image reveal" onclick="openLightbox(6)">
+                <img src="img/restauro.jpeg" alt="Dettaglio Restauro" data-category="restauri tutte" class="custom-image reveal" onclick="openLightbox(7)">
+            </div>
+        </div>
+    </section>
+
+    <!-- NUOVA SEZIONE BLOG / MAGAZINE (CON TOGGLE) - SPOSTATA QUI -->
     <section id="blog" class="blog-section">
         <div class="container">
             <h2 class="reveal">Magazine & Consigli</h2>
@@ -788,34 +831,6 @@
         </div>
     </div>
 
-    <!-- FOTO LAVORI (Con Lightbox Desktop/Mobile) -->
-    <section id="foto-lavori" class="photo">
-        <div class="container">
-            <h2 class="reveal">Galleria Realizzazioni</h2>
-            
-            <!-- NUOVO FILTRO A PULSANTI -->
-            <div id="filterContainer" class="reveal">
-                <!-- Nota: Ho aggiunto active di default nel codice ma lo rimuoverò via JS su mobile -->
-                <button class="filter-btn active" data-filter="tutte">Tutti</button>
-                <button class="filter-btn" data-filter="interni">Interni & Design</button>
-                <button class="filter-btn" data-filter="restauri">Restauri</button>
-            </div>
-
-            <!-- Aggiunta classe per logica mobile -->
-            <div class="photo-gallery awaiting-mobile-interaction">
-                <!-- Cliccando si apre il Lightbox. Ho aggiunto la classe reveal ad ogni immagine -->
-                <img src="img/interno.jpeg" alt="Living Moderno" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(0)">
-                <img src="img/spinadipesce1.jpeg" alt="Dettaglio Spina" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(1)">
-                <img src="img/corridoio_spina_di_pesce.jpeg" alt="Corridoio a spina" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(2)">
-                <img src="img/ufficio.jpeg" alt="Ufficio Direzionale" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(3)">
-                <img src="img/parete_camera.jpeg" alt="Parete Boiserie" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(4)">
-                <img src="img/bagno.jpeg" alt="Bagno in Legno" data-category="interni tutte" class="custom-image reveal" onclick="openLightbox(5)">
-                <img src="img/restauro2.jpeg" alt="Restauro Villa" data-category="restauri tutte" class="custom-image reveal" onclick="openLightbox(6)">
-                <img src="img/restauro.jpeg" alt="Dettaglio Restauro" data-category="restauri tutte" class="custom-image reveal" onclick="openLightbox(7)">
-            </div>
-        </div>
-    </section>
-
     <!-- LIGHTBOX (Zoom Immagini) -->
     <div id="lightbox" class="lightbox">
         <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
@@ -955,6 +970,11 @@
     <a href="https://wa.me/393248985320" target="_blank" class="whatsapp-float">
         <img src="img/whatsapp-2.png" alt="WhatsApp" class="whatsapp-icon" 
              onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fab fa-whatsapp\' style=\'color:white; font-size:35px;\'></i>'">
+    </a>
+
+    <!-- Back To Top Button -->
+    <a href="#" id="backToTop" class="back-to-top" title="Torna su">
+        <i class="fas fa-arrow-up"></i>
     </a>
 
     <!-- SCRIPT JS UNIFICATO -->
@@ -1441,6 +1461,22 @@
                     }
                 }
             });
+        });
+
+        // --- 13. BACK TO TOP LOGIC ---
+        const backToTopBtn = document.getElementById("backToTop");
+
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.add("show");
+            } else {
+                backToTopBtn.classList.remove("show");
+            }
+        });
+
+        backToTopBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
         });
 
     </script>
