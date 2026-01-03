@@ -20,7 +20,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
     <!-- Librerie Esterne -->
+    <!-- PDF Generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- EMAILJS (Nuova Libreria per invio email diretto) -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
     <style>
         /* --- 1. VARIABILI & RESET --- */
@@ -843,7 +847,8 @@
     <section id="preventivo" class="preventivo">
         <div class="container">
             <h2 class="reveal">Richiedi Preventivo</h2>
-            <p class="reveal" style="text-align: center; margin-bottom: 30px;">Contattaci per un sopralluogo gratuito o usa il configuratore per una stima immediata.</p>
+            <!-- TESTO AGGIORNATO (Rimosso riferimento al configuratore) -->
+            <p class="reveal" style="text-align: center; margin-bottom: 30px;">Contattaci per un sopralluogo gratuito.</p>
 
             <!-- Form Contatto Rapido -->
             <form id="contactForm" class="reveal" style="max-width: 600px; margin: 0 auto 40px auto;">
@@ -861,7 +866,8 @@
                 </div>
             </form>
 
-            <div class="reveal" style="text-align: center;">
+            <!-- SEZIONE SIMULATORE NASCOSTA (display: none) -->
+            <div class="reveal" style="text-align: center; display: none;">
                 <p style="font-size: 14px; color: #888; margin-bottom: 15px;">Oppure prova il nostro calcolatore automatico:</p>
                 <button id="showQuoteBtn" style="background-color: var(--col-white); color: var(--col-primary); border: 2px solid var(--col-primary);">
                     <i class="fas fa-calculator"></i> Apri Simulatore
@@ -985,6 +991,15 @@
             this.style.display = "none";
             document.getElementById("headerLogoText").style.display = "block";
         };
+
+        // --- EMAILJS CONFIGURAZIONE (INIZIALIZZAZIONE) ---
+        (function() {
+            // TODO: Inserisci qui la tua PUBLIC KEY di EmailJS
+            // La trovi su https://dashboard.emailjs.com/admin/account > Public Key
+            emailjs.init({
+                publicKey: "oTmjg__Crf0rG7j9n", // <--- SOSTITUISCI QUESTO
+            });
+        })();
 
         // --- 1. COOKIE BANNER LOGIC (24 ORE) ---
         document.addEventListener("DOMContentLoaded", () => {
@@ -1361,12 +1376,74 @@
             document.getElementById("customPriceGroup").style.display = "none";
         });
 
-        // --- 9. EMAIL & PDF ---
-        document.getElementById("sendEmailBtn").addEventListener("click", () => {
+        // --- 9. INVIO EMAIL CON EMAILJS (AGGIORNATO) ---
+        document.getElementById("sendEmailBtn").addEventListener("click", function() {
+            // Salva riferimento al bottone e testo originale per feedback
+            const btn = this;
+            const originalText = btn.innerText;
+
             const name = document.getElementById("name").value;
-            const body = document.getElementById("message").value;
-            if(!name || !body) { alert("Inserisci nome e messaggio"); return; }
-            window.location.href = `mailto:luxurywoodpavimenti@gmail.com?subject=Richiesta da ${name}&body=${encodeURIComponent(body)}`;
+            const email = document.getElementById("email").value;
+            const message = document.getElementById("message").value;
+
+            // Validazione base
+            if (!name || !email || !message) { 
+                alert("Per favore, compila tutti i campi (Nome, Email e Messaggio)."); 
+                return; 
+            }
+
+            // Mostra stato di caricamento
+            btn.innerText = "Invio in corso...";
+            btn.disabled = true;
+            btn.style.opacity = "0.7";
+
+            // Parametri che verranno passati al template di EmailJS
+            // Assicurati che nel template EmailJS tu abbia impostato {{from_name}}, {{from_email}}, {{message}}
+            const templateParams = {
+                // Inviamo variabili con nomi multipli per sicurezza (dipende da come hai impostato il template)
+                from_name: name,
+                name: name, // Alcuni template usano solo {{name}}
+                
+                from_email: email,
+                email: email, // Alcuni template usano solo {{email}}
+                reply_to: email, // Fondamentale per fare "Rispondi" dalla tua mail
+                
+                message: message
+            };
+
+            // --- INVIO ---
+            // TODO: Sostituisci SERVICE_ID e TEMPLATE_ID con i tuoi reali
+            // Trovi il SERVICE ID in "Email Services" e il TEMPLATE ID in "Email Templates"
+            emailjs.send('service_bl8u6bf', 'template_bwzkd8v', templateParams)
+                .then(function(response) {
+                   console.log('SUCCESS!', response.status, response.text);
+                   
+                   // 1. Feedback Visuale: Cambia testo e colore bottone
+                   btn.innerHTML = '<i class="fas fa-check"></i> Messaggio Inviato!';
+                   btn.style.backgroundColor = "#4CAF50"; // Verde successo
+                   btn.style.color = "white"; // Testo bianco
+                   
+                   // 2. Resetta il form
+                   document.getElementById("contactForm").reset();
+
+                   // 3. Dopo 4 secondi, ripristina il bottone originale
+                   setTimeout(function() {
+                       btn.innerHTML = originalText;
+                       btn.style.backgroundColor = ""; // Torna al colore originale
+                       btn.style.color = ""; // Torna al colore originale
+                       btn.disabled = false;
+                       btn.style.opacity = "1";
+                   }, 4000);
+
+                }, function(error) {
+                   console.error('FAILED...', error);
+                   alert('Errore nell\'invio. Riprova più tardi.');
+                   
+                   // Ripristina subito in caso di errore
+                   btn.innerText = originalText;
+                   btn.disabled = false;
+                   btn.style.opacity = "1";
+                });
         });
 
         document.getElementById("downloadPdfBtn").addEventListener("click", () => {
