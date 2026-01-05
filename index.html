@@ -166,7 +166,12 @@
         }
         .nav-item i { font-size: 20px; margin-bottom: 4px; transition: transform 0.2s; }
         .nav-item.active { color: var(--col-accent); font-weight: 700; }
-        .nav-item:hover { color: var(--col-accent); background-color: #f9f9f9; }
+        
+        /* FIX IOS: L'effetto hover si attiva solo se il dispositivo supporta l'hover (mouse) */
+        @media (hover: hover) {
+            .nav-item:hover { color: var(--col-accent); background-color: #f9f9f9; }
+        }
+        
         .nav-item.active i { transform: translateY(-3px); }
 
         /* --- 4. SEZIONI GENERALI --- */
@@ -473,28 +478,67 @@
 
         .cookie-banner {
             position: fixed; 
-            /* FIX IOS: Bottom calcolato con safe area */
             bottom: calc(90px + env(safe-area-inset-bottom)); 
             left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 400px; background: rgba(30,30,30,0.95);
-            color: white; padding: 20px; border-radius: 10px; text-align: center;
-            z-index: 5000; display: none;
+            width: 90%; max-width: 380px;
+            /* NUOVO STILE: Glassmorphism scuro e bordi arrotondati */
+            background: rgba(44, 44, 44, 0.95); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: white; 
+            padding: 20px 25px; 
+            border-radius: 16px; 
+            text-align: center;
+            z-index: 5000; 
+            display: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            border: 1px solid rgba(255,255,255,0.1);
+            animation: slideUpFade 0.5s ease-out forwards;
         }
-        @media(min-width: 1024px) { .cookie-banner { bottom: 30px; left: 30px; transform: none; } }
-        .cookie-btn { padding: 8px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin: 5px; }
-        .cookie-accept { background: var(--col-accent); color: white; }
-        .cookie-decline { background: #555; color: white; }
+
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translate(-50%, 20px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
+        }
+
+        @media(min-width: 1024px) { 
+            .cookie-banner { bottom: 30px; } 
+        }
+        
+        .cookie-btn { 
+            background: var(--col-accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(196, 154, 108, 0.3);
+            width: 100%;
+        }
+        .cookie-btn:hover {
+            background: var(--col-accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(196, 154, 108, 0.4);
+        }
 
     </style>
 </head>
 
 <body>
 
-    <!-- Cookie Banner -->
+    <!-- Cookie Banner (Info No Tracking) - STILE MIGLIORATO -->
     <div id="cookieBanner" class="cookie-banner">
-        <p style="margin-bottom:15px; font-size:14px;">Utilizziamo i cookie per offrirti la migliore esperienza. Continuando accetti la nostra policy.</p>
-        <button class="cookie-btn cookie-accept" id="acceptCookies">Accetta</button>
-        <button class="cookie-btn cookie-decline" id="continueWithoutCookies">Rifiuta</button>
+        <div style="font-size: 24px; margin-bottom: 10px; color: var(--col-accent);">
+            <i class="fas fa-user-shield"></i>
+        </div>
+        <p style="margin-bottom:20px; font-size:14px; line-height: 1.5; color: #eee;">
+            <strong>Privacy First.</strong><br>
+            Questo sito non utilizza cookie di tracciamento e rispetta la tua privacy.
+        </p>
+        <button class="cookie-btn" id="acceptCookies">Ho capito</button>
     </div>
 
     <!-- HEADER DESKTOP -->
@@ -980,10 +1024,10 @@
                     </ul>
                 </div>
             </div>
-            <div class="contact-social reveal" style="justify-content: center;">
+           <!-- <div class="contact-social reveal" style="justify-content: center;">
                 <a href="https://instagram.com/luxury_wood" target="_blank"><i class="fab fa-instagram"></i></a>
                 <a href="https://facebook.com/luxurywood" target="_blank"><i class="fab fa-facebook"></i></a>
-            </div>
+            </div>-->
         </div>
     </section>
 
@@ -1020,30 +1064,25 @@
             });
         })();
 
-        // --- 1. COOKIE BANNER LOGIC (24 ORE) ---
+        // --- 1. INFO BANNER LOGIC (NO TRACKING - 5 SECONDI) ---
         document.addEventListener("DOMContentLoaded", () => {
             const banner = document.getElementById("cookieBanner");
-            // Controllo scadenza 24 ore
-            const consent = localStorage.getItem("cookieConsent");
-            const consentTime = localStorage.getItem("cookieConsentTime");
-            const now = new Date().getTime();
-            const twentyFourHours = 24 * 60 * 60 * 1000;
+            
+            // Mostra il banner
+            banner.style.display = "block";
 
-            if (!consent || !consentTime || (now - consentTime > twentyFourHours)) {
-                // Scaduto o non settato: rimuovi e mostra banner
-                localStorage.removeItem("cookieConsent");
-                localStorage.removeItem("cookieConsentTime");
-                banner.style.display = "block";
-            }
+            // Funzione per nascondere il banner
+            const hideBanner = () => {
+                banner.style.transition = "opacity 0.5s ease";
+                banner.style.opacity = "0";
+                setTimeout(() => { banner.style.display = "none"; }, 500);
+            };
 
-            document.getElementById("acceptCookies").addEventListener("click", () => {
-                localStorage.setItem("cookieConsent", "true");
-                localStorage.setItem("cookieConsentTime", new Date().getTime()); // Salva timestamp
-                banner.style.display = "none";
-            });
-            document.getElementById("continueWithoutCookies").addEventListener("click", () => {
-                banner.style.display = "none";
-            });
+            // Chiudi al click su OK
+            document.getElementById("acceptCookies").addEventListener("click", hideBanner);
+
+            // Chiudi automaticamente dopo 5 secondi
+            setTimeout(hideBanner, 5000);
         });
 
         // --- 2. HEADER SCROLL EFFECT ---
