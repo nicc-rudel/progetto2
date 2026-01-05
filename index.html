@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <link rel="icon" href="img/Logo_piccolo.png" type="image/jpeg">
     <title>LuxuryWood | Pavimenti d'Eccellenza</title>
     <meta name="description" content="LuxuryWood è un'azienda specializzata nella posa e restauro di pavimenti in legno di pregio.">
@@ -54,7 +54,8 @@
             background-color: var(--col-bg);
             color: var(--col-primary);
             line-height: 1.6;
-            padding-bottom: var(--nav-mobile-height); 
+            /* FIX IOS: Aumenta il padding bottom per compensare la nav bar più alta */
+            padding-bottom: calc(var(--nav-mobile-height) + env(safe-area-inset-bottom)); 
             overflow-x: hidden; 
         }
 
@@ -145,10 +146,16 @@
 
         /* --- 3. MOBILE BOTTOM NAVIGATION --- */
         .mobile-bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: var(--nav-mobile-height);
+            position: fixed; bottom: 0; left: 0; width: 100%; 
+            /* FIX IOS: Altezza dinamica che somma l'altezza standard (65px) alla Safe Area */
+            height: calc(var(--nav-mobile-height) + env(safe-area-inset-bottom));
+            
             background-color: var(--col-white); box-shadow: 0 -4px 15px rgba(0,0,0,0.1); 
             z-index: 2000; display: flex; justify-content: space-around; align-items: center;
-            border-top: 1px solid #e0e0e0; padding-bottom: env(safe-area-inset-bottom);
+            border-top: 1px solid #e0e0e0; 
+            
+            /* Il padding bottom spinge il contenuto (le icone) verso l'alto, sopra la barra nera di iOS */
+            padding-bottom: env(safe-area-inset-bottom);
         }
         @media (min-width: 1024px) { .mobile-bottom-nav { display: none; } }
 
@@ -430,18 +437,27 @@
 
         /* --- 12. ELEMENTI FLOTTANTI --- */
         .whatsapp-float {
-            position: fixed; bottom: 90px; right: 20px;
+            position: fixed; 
+            /* FIX IOS: Bottom calcolato con safe area */
+            bottom: calc(90px + env(safe-area-inset-bottom)); 
+            right: 20px;
             width: 60px; height: 60px; background: #25D366;
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 1500; transition: 0.3s;
         }
         .whatsapp-float img { width: 35px; }
         .whatsapp-float:hover { transform: scale(1.1); }
-        @media(min-width: 1024px) { .whatsapp-float { bottom: 30px; } }
+        
+        @media(min-width: 1024px) { 
+            .whatsapp-float { bottom: 30px; } 
+        }
 
         /* --- BACK TO TOP BUTTON --- */
         .back-to-top {
-            position: fixed; bottom: 160px; right: 20px; /* Mobile position above WhatsApp (90+60+10) */
+            position: fixed; 
+            /* FIX IOS: Bottom calcolato con safe area (90+60+10 = 160) */
+            bottom: calc(160px + env(safe-area-inset-bottom));
+            right: 20px; 
             width: 50px; height: 50px; background: var(--col-primary);
             color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 1499;
@@ -456,7 +472,10 @@
         }
 
         .cookie-banner {
-            position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
+            position: fixed; 
+            /* FIX IOS: Bottom calcolato con safe area */
+            bottom: calc(90px + env(safe-area-inset-bottom)); 
+            left: 50%; transform: translateX(-50%);
             width: 90%; max-width: 400px; background: rgba(30,30,30,0.95);
             color: white; padding: 20px; border-radius: 10px; text-align: center;
             z-index: 5000; display: none;
