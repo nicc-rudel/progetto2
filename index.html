@@ -356,24 +356,39 @@
         #filterContainer {
             display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap;
         }
+
         .filter-btn {
             padding: 10px 25px; border: 1px solid #ccc; border-radius: 30px;
             background: transparent; color: var(--col-primary);
             font-family: var(--font-body); font-size: 14px; font-weight: 600;
             cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;
         }
-        @media (hover: hover) {
-            .filter-btn:hover { border-color: var(--col-accent); color: var(--col-accent); }
-        }
+
+        /* STILE ATTIVO (Sfondo Oro, Testo Bianco) */
         .filter-btn.active {
-            background-color: var(--col-accent); border-color: var(--col-accent);
-            color: white; box-shadow: 0 5px 15px rgba(196, 154, 108, 0.3);
+            background-color: var(--col-accent); 
+            border-color: var(--col-accent);
+            color: white; 
+            box-shadow: 0 5px 15px rgba(196, 154, 108, 0.3);
         }
 
-        .photo-gallery {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;
-        }
+        /* GESTIONE HOVER (Mouse sopra) */
+        @media (hover: hover) {
+            
+            /* Caso 1: Passo sopra un bottone NON attivo (Diventa testo oro, sfondo trasparente) */
+            .filter-btn:not(.active):hover { 
+                border-color: var(--col-accent); 
+                color: var(--col-accent); 
+                background-color: transparent;
+            }
 
+            /* Caso 2: Passo sopra un bottone GIA' attivo (Rimane testo bianco, scurisco leggermente lo sfondo) */
+            .filter-btn.active:hover {
+                background-color: var(--col-accent-hover); /* Diventa Oro Scuro */
+                color: white; /* Resta leggibile */
+                border-color: var(--col-accent-hover);
+            }
+        }
         /* GESTIONE FOTO SU MOBILE */
         @media (max-width: 1024px) {
             .photo-gallery.awaiting-mobile-interaction .custom-image { display: none !important; }
